@@ -1,7 +1,8 @@
-package com.example.unsplashphotos
+package com.example.unsplashphotos.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.unsplashphotos.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
