@@ -13,8 +13,17 @@ class PhotoDataSourceImpl(
 
     override suspend fun getPhotos(): Response<List<Photo>> {
         val store = photoService.getPhotos(CLIENT_ID)
-        Log.d("T===>", "photos: " + store)
+        Log.d("===>", "photos: " + store)
         return store
+    }
+
+    override suspend fun getPhotoById(photoId: String): Response<Photo> {
+
+        val photo = photoService.getPhotoById(photoId, CLIENT_ID)
+
+        Log.d("===>", "CheckPhoto: " + photo)
+
+        return photo
     }
 
 }

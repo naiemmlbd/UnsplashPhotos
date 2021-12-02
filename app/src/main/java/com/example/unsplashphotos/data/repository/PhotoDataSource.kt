@@ -8,4 +8,6 @@ interface PhotoDataSource {
 
     suspend fun getPhotos(): Response<List<Photo>>
 
+    suspend fun getPhotoById(id: String): Response<Photo>
+
 }
