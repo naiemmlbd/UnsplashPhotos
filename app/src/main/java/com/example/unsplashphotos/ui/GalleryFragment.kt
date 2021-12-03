@@ -11,8 +11,9 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class GalleryFragment : Fragment() {
 
     private lateinit var photoAdapter: PhotoAdapter
@@ -41,7 +42,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         binding.photosRecyclerView.adapter = photoAdapter
-        val spanCount = 2
+        val spanCount = 1
         binding.photosRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), spanCount, GridLayoutManager.VERTICAL, false)
 
