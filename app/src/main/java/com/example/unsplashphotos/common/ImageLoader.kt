@@ -17,7 +17,7 @@ class ImageLoader {
     ) {
         Glide.with(context)
             .load(url)
-            .fitCenter()
+            .centerCrop()
             .into(imageView)
     }
 
