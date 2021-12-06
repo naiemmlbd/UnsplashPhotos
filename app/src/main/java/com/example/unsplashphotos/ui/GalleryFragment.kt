@@ -46,6 +46,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         binding.photosRecyclerView.adapter = photoAdapter
+        photoViewModel
         val spanCount = 1
         binding.photosRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), spanCount, GridLayoutManager.VERTICAL, false)
@@ -55,14 +56,10 @@ class GalleryFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun displayPhotos() {
-        binding.photoProgressBar.visibility = View.VISIBLE
-        val responseLiveData = photoViewModel.fetchPhotos()
-
         lifecycleScope.launch {
             withContext(Dispatchers.IO) {
                 photoViewModel.fetchPhotos().collectLatest {
                     photoAdapter.submitData(it)
-                    binding.photoProgressBar.visibility = View.GONE
                 }
             }
         }

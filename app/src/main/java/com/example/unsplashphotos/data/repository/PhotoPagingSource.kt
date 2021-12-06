@@ -9,9 +9,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepoImpl) : PagingSource<Int, Photo>() {
-    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        return null
-    }
+
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
 
@@ -19,9 +17,20 @@ class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepoImpl
 
         val photoResult = photoRepo.getPhotos(page)
         if (photoResult != null) {
-            return LoadResult.Page(photoResult, if (page == 1) null else page - 1, page + 1)
+            return LoadResult.Page(
+                photoResult,
+                if (page == 1) null else page - 1,
+                page + 1
+            )
         }
 
         return LoadResult.Error(Exception("Error Occurred"))
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
     }
 }
