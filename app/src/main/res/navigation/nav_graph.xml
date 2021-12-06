@@ -10,7 +10,20 @@
         android:name="com.example.unsplashphotos.ui.GalleryFragment"
         android:label="fragment_gallery"
         tools:layout="@layout/fragment_gallery" >
+        <action
+            android:id="@+id/action_galleryFragment_to_photoFullScreenFragment"
+            app:destination="@id/photoFullScreenFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/photoFullScreenFragment"
+        android:name="com.example.unsplashphotos.ui.photofullscreen.PhotoFullScreenFragment"
+        android:label="fragment_photo_full_screen"
+        tools:layout="@layout/fragment_photo_full_screen">
+
+    <argument
+        android:name="photoId"
+        android:defaultValue="ph"
+        app:argType="string" />
 
     </fragment>
-
 </navigation>

@@ -8,7 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,7 +29,13 @@ class GalleryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        photoAdapter = PhotoAdapter()
+        photoAdapter = PhotoAdapter{ selectedPhoto: Photo, extra ->
+            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(selectedPhoto.id)
+            findNavController().navigate(action)
+        }
+
+        photoAdapter.stateRestorationPolicy =
+            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
 
     }
 
