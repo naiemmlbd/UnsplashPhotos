@@ -1,6 +1,6 @@
 package com.example.unsplashphotos.di
 
-import com.example.unsplashphotos.domain.repository.PhotoRepo
+import com.example.unsplashphotos.data.repository.PhotoPagingSource
 import com.example.unsplashphotos.domain.usecase.PhotoUseCase
 import dagger.Module
 import dagger.Provides
@@ -15,8 +15,8 @@ class UseCaseModule {
     @Singleton
     @Provides
     fun providePhotoUseCase(
-        photoRepo: PhotoRepo
-    ): PhotoUseCase = PhotoUseCase(photoRepo)
+        photoPagingSource: PhotoPagingSource
+    ): PhotoUseCase = PhotoUseCase(photoPagingSource)
 
 
 }

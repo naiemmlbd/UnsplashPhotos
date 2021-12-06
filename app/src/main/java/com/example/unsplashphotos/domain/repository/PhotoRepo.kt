@@ -4,7 +4,7 @@ import com.example.unsplashphotos.data.model.Photo
 
 
 interface PhotoRepo {
-    suspend fun getPhotos(): List<Photo>?
+    suspend fun getPhotos(page: Int): List<Photo>?
     suspend fun getPhotoById(photoId: String): Photo
 
 

@@ -1,18 +1,17 @@
 package com.example.unsplashphotos.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
+import androidx.paging.PagingData
+import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.domain.usecase.PhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(private val photoUseCase: PhotoUseCase) : ViewModel() {
 
-    fun getPhotos() = liveData {
-        val photoList = photoUseCase.getPhotos()
-        Log.d("===>", "viewModel " + photoList?.size)
-        emit(photoList)
+    fun fetchPhotos(): Flow<PagingData<Photo>> {
+        return photoUseCase.fetchPhotos()
     }
 }

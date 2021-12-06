@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
@@ -52,18 +56,15 @@ class GalleryFragment : Fragment() {
     @SuppressLint("NotifyDataSetChanged")
     private fun displayPhotos() {
         binding.photoProgressBar.visibility = View.VISIBLE
-        val responseLiveData = photoViewModel.getPhotos()
-        responseLiveData.observe(viewLifecycleOwner,{
-            if (it != null){
-                photoAdapter.setList(it)
-                photoAdapter.notifyDataSetChanged()
-                binding.photoProgressBar.visibility = View.GONE
-            } else {
-                binding.photoProgressBar.visibility = View.GONE
-                binding.textView.visibility = View.VISIBLE
-                binding.textView.text = "No Data Available"
-                Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
+        val responseLiveData = photoViewModel.fetchPhotos()
+
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) {
+                photoViewModel.fetchPhotos().collectLatest {
+                    photoAdapter.submitData(it)
+                    binding.photoProgressBar.visibility = View.GONE
+                }
             }
-        })
+        }
     }
 }
