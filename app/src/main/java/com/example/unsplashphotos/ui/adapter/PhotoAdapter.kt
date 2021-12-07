@@ -6,14 +6,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.FragmentNavigator
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.data.model.Photo
-import com.example.unsplashphotos.data.repository.DIFF_ITEM_CALLBACK
 import com.example.unsplashphotos.databinding.ItemPhotoBinding
 
-
-class PhotoAdapter(private val selectListener: (Photo, FragmentNavigator.Extras) -> Unit) : PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder>(DIFF_ITEM_CALLBACK) {
+class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras) -> Unit) :
+    PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder>(DIFF_ITEM_CALLBACK) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -25,14 +25,14 @@ class PhotoAdapter(private val selectListener: (Photo, FragmentNavigator.Extras)
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
         getItem(position)?.let {
-            holder.bind(it, selectListener)
+            holder.bind(it, onClickListener)
         }
     }
 
 
     class PhotoViewHolder(private val binding: ItemPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(photo: Photo, selectListener: (Photo,FragmentNavigator.Extras) -> Unit) {
+        fun bind(photo: Photo, selectListener: (Photo, FragmentNavigator.Extras) -> Unit) {
             binding.photo = photo
 
             binding.root.setOnClickListener {
@@ -44,4 +44,19 @@ class PhotoAdapter(private val selectListener: (Photo, FragmentNavigator.Extras)
         }
 
     }
+
+    companion object {
+        @JvmStatic
+        val DIFF_ITEM_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
+            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
+                return oldItem.id == newItem.id
+            }
+            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
+                return oldItem.id == newItem.id
+            }
+
+        }
+    }
+
+
 }

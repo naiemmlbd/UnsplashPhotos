@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepoImpl) : PagingSource<Int, Photo>() {
+class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepo) : PagingSource<Int, Photo>() {
 
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {

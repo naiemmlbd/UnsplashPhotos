@@ -3,10 +3,14 @@ package com.example.unsplashphotos.common
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
-import com.example.unsplashphotos.common.ImageLoader
+import com.bumptech.glide.Glide
 
 
 @BindingAdapter("loadUrl")
 fun ImageView.loadUrl(url: String?) {
-    ImageLoader.instance?.load(context, url ?: "", this)
+
+    Glide.with(this.context)
+        .load(url)
+        .centerCrop()
+        .into(this)
 }

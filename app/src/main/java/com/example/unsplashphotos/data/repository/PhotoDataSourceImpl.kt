@@ -1,29 +1,26 @@
 package com.example.unsplashphotos.data.repository
 
-import android.util.Log
-import com.example.unsplashphotos.data.CLIENT_ID
-import com.example.unsplashphotos.data.api.PhotoService
+import com.example.unsplashphotos.BuildConfig
+import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
 import com.example.unsplashphotos.data.model.Photo
 import retrofit2.Response
+import timber.log.Timber
 import javax.inject.Inject
 
 
 class PhotoDataSourceImpl @Inject constructor(
-    private val photoService: PhotoService
+    private val photoRemoteDataSource: PhotoRemoteDataSource
 ) : PhotoDataSource {
 
     override suspend fun getPhotos(page: Int): Response<List<Photo>> {
-        val store = photoService.getPhotos(CLIENT_ID, page)
-        Log.d("===>", "photos: " + store)
+        val store = photoRemoteDataSource.getPhotos(BuildConfig.CLIENT_ID, page)
+        Timber.tag("===>").d("photos: %s", store)
         return store
     }
 
     override suspend fun getPhotoById(photoId: String): Response<Photo> {
-
-        val photo = photoService.getPhotoById(photoId, CLIENT_ID)
-
-        Log.d("===>", "CheckPhoto: " + photo)
-
+        val photo = photoRemoteDataSource.getPhotoById(photoId, BuildConfig.CLIENT_ID)
+        Timber.d("CheckPhoto: " + photo)
         return photo
     }
 

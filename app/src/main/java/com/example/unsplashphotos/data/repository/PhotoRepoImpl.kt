@@ -1,8 +1,8 @@
 package com.example.unsplashphotos.data.repository
 
-import android.util.Log
 import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.domain.repository.PhotoRepo
+import timber.log.Timber
 import javax.inject.Inject
 
 class PhotoRepoImpl @Inject constructor(
@@ -12,24 +12,24 @@ class PhotoRepoImpl @Inject constructor(
         return getPhotosFromAPI(page)
     }
 
-    override suspend fun getPhotoById(photoId: String): Photo {
+    override suspend fun getPhotoById(photoId: String): Photo? {
 
         var photoStore: Photo? = null
 
         try {
             val response = photoDataSource.getPhotoById(photoId)
             val body = response.body()
-            Log.i("T===>", "Photo: " + body)
+            Timber.tag("T===>").i("Photo: %s", body)
 
             if (body != null) {
                 photoStore = body
             }
 
         } catch (exception: Exception) {
-            Log.e("ErrorPhoto", exception.message.toString())
+            Timber.e(exception.message.toString())
         }
 
-        return photoStore!!
+        return photoStore
     }
 
 
@@ -39,18 +39,18 @@ class PhotoRepoImpl @Inject constructor(
         try {
             val response = photoDataSource.getPhotos(page)
             val body = response.body()
-            Log.d("===>", "CheckPoint 1" + body);
+            Timber.tag("===>").d("CheckPoint 1%s", body);
 
             if (body != null) {
                 photoList = body
             }
 
         } catch (exception: Exception) {
-            Log.e("ERROR", exception.message.toString())
+            Timber.e(exception.message.toString())
         }
 
 
-        Log.d("===>", "CheckPoint 2" + photoList);
+        Timber.tag("===>").d("CheckPoint 2%s", photoList);
         return photoList
     }
 

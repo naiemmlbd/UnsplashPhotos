@@ -5,25 +5,24 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 
-class ImageLoader {
-
+class ImageLoader (private val context: Context) {
 
     fun load(
-        context: Context,
         url: String,
         imageView: ImageView
     ) {
         Glide.with(context)
             .load(url)
             .centerCrop()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(imageView)
     }
 
 
     fun load(
-        context: Context,
         bitmap: Bitmap,
         imageView: ImageView,
         placeholder: Int
@@ -35,7 +34,6 @@ class ImageLoader {
     }
 
     fun load(
-        context: Context,
         drawable: Int,
         imageView: ImageView
     ) {
@@ -46,7 +44,6 @@ class ImageLoader {
     }
 
     fun load(
-        context: Context,
         drawable: Drawable,
         imageView: ImageView
     ) {
@@ -55,13 +52,4 @@ class ImageLoader {
             .into(imageView)
     }
 
-    companion object {
-        protected var INSTANCE: ImageLoader? = null
-        val instance: ImageLoader?
-            get() {
-                if (INSTANCE == null) INSTANCE =
-                    ImageLoader()
-                return INSTANCE
-            }
-    }
 }

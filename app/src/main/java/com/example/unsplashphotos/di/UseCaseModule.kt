@@ -18,5 +18,4 @@ class UseCaseModule {
         photoPagingSource: PhotoPagingSource
     ): PhotoUseCase = PhotoUseCase(photoPagingSource)
 
-
 }

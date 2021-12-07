@@ -9,39 +9,46 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoFullScreenFragment : Fragment() {
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
     private lateinit var binding: FragmentPhotoFullScreenBinding
     private val photoFullViewModel by viewModels<PhotoFullViewModel>()
-    private var photoId: String = "ph"
+    private lateinit var photoId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        photoId = arguments?.getString("photoId") ?: "ph"
+        photoId = arguments?.getString("photoId").toString()
 
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPhotoFullScreenBinding.inflate(inflater)
         return binding.root
     }
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         displayPhoto()
     }
 
     private fun displayPhoto() {
-
         binding.progressBar.visibility = View.VISIBLE
 
         val responseLiveData = photoFullViewModel.getPhotoById(photoId)
@@ -61,20 +68,7 @@ class PhotoFullScreenFragment : Fragment() {
     }
 
     private fun loadPhoto(url: String) {
-
-        ImageLoader.instance?.load(binding.imgPhoto.context, url, binding.imgPhoto)
-
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+        imageLoader.load(url, binding.imgPhoto)
     }
 }
 

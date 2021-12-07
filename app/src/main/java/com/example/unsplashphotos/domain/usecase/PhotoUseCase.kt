@@ -12,9 +12,11 @@ import javax.inject.Inject
 
 class PhotoUseCase @Inject constructor(private val photoPagingSource: PagingSource<Int, Photo>) {
 
+    val config = PagingConfig(20, enablePlaceholders = false)
+
     fun fetchPhotos(): Flow<PagingData<Photo>> {
         return Pager(
-            PagingConfig(20, enablePlaceholders = false)
+            config
         ) {
             photoPagingSource
         }.flow
