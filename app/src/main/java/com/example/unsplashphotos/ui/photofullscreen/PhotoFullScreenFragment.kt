@@ -8,13 +8,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,20 +53,22 @@ class PhotoFullScreenFragment : Fragment() {
 
     private fun displayPhoto() {
         binding.progressBar.visibility = View.VISIBLE
-
-        val responseLiveData = photoFullViewModel.getPhotoById(photoId)
-        responseLiveData.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                binding.photoFullScreen = it
-                loadPhoto(it.urls.regular)
-                binding.progressBar.visibility = View.GONE
-            } else {
-                binding.progressBar.visibility = View.GONE
-                binding.textTitle.text = "No Data Available"
-                Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            photoFullViewModel.getPhotoById(photoId)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                photoFullViewModel.flow.collect {
+                    if (it != null) {
+                        binding.photoFullScreen = it
+                        loadPhoto(it.urls.regular)
+                        binding.progressBar.visibility = View.GONE
+                    } else {
+                        binding.progressBar.visibility = View.GONE
+                        binding.textTitle.text = getString(R.string.no_data)
+                        Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
-        })
-
+        }
 
     }
 
