@@ -6,7 +6,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class PhotoRepoImpl @Inject constructor(
-    private val photoDataSource: PhotoDataSource
+    private val photoDataSource: PhotoDataSource,
+    private val photoCacheDataSource: PhotoCacheDataSource
 ) : PhotoRepo {
     override suspend fun getPhotos(page: Int): List<Photo>? {
         return getPhotosFromAPI(page)
@@ -32,6 +33,18 @@ class PhotoRepoImpl @Inject constructor(
         return photoStore
     }
 
+    suspend fun getPhotosFromCache(page: Int): List<Photo> {
+        var photoList: List<Photo> = ArrayList<Photo>()
+
+        if (photoCacheDataSource.getPhotoFromCache(page) == null) {
+            photoList = getPhotosFromAPI(page)
+            photoCacheDataSource.savePhotoToCache(page, photoList)
+        }else{
+            photoList = photoCacheDataSource.getPhotoFromCache(page)!!
+        }
+
+        return photoList
+    }
 
     private suspend fun getPhotosFromAPI(page: Int): List<Photo> {
         var photoList = listOf<Photo>()
