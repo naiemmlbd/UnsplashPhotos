@@ -2,6 +2,7 @@ package com.example.unsplashphotos.di
 
 import com.example.unsplashphotos.BuildConfig
 import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
@@ -11,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,11 +29,16 @@ object NetworkingModule {
             .addInterceptor(interceptor).build()
 
     @Provides
-    fun getRetrofitInstance(client: OkHttpClient): Retrofit {
+    fun provideGson(): Gson {
+        return GsonBuilder().create()
+    }
+
+    @Provides
+    fun getRetrofitInstance(client: OkHttpClient, gson: Gson): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
     }
 

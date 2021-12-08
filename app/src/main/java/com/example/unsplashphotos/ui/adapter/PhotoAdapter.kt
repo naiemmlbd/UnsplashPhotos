@@ -57,6 +57,4 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
 
         }
     }
-
-
 }

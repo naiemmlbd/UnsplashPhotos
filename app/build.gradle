@@ -73,6 +73,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${versions.lifecycle_version}")
     //noinspection LifecycleAnnotationProcessorWithJava8
     kapt "androidx.lifecycle:lifecycle-compiler:${versions.lifecycle_version}"
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:${versions.lifecycle_version}")
 
     //Retrofit
     implementation "com.squareup.retrofit2:retrofit:${versions.retrofit_version}"

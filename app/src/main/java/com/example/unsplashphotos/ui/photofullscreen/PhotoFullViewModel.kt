@@ -21,5 +21,4 @@ class PhotoFullViewModel @Inject constructor(private val photoFullScreenUseCase:
         emit(photo)
     }
 
-
 }
