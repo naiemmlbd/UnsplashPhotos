@@ -10,7 +10,7 @@ class PhotoRepoImpl @Inject constructor(
     private val photoCacheDataSource: PhotoCacheDataSource
 ) : PhotoRepo {
     override suspend fun getPhotos(page: Int): List<Photo>? {
-        return getPhotosFromAPI(page)
+        return getPhotosFromCache(page)
     }
 
     override suspend fun getPhotoById(photoId: String): Photo? {
@@ -35,14 +35,13 @@ class PhotoRepoImpl @Inject constructor(
 
     suspend fun getPhotosFromCache(page: Int): List<Photo> {
         var photoList: List<Photo> = ArrayList<Photo>()
-
-        if (photoCacheDataSource.getPhotoFromCache(page) == null) {
+        val cachePhotos = photoCacheDataSource.getPhotoFromCache(page)
+        if ( cachePhotos == null) {
             photoList = getPhotosFromAPI(page)
             photoCacheDataSource.savePhotoToCache(page, photoList)
         }else{
-            photoList = photoCacheDataSource.getPhotoFromCache(page)!!
+            photoList = cachePhotos
         }
-
         return photoList
     }
 
@@ -68,3 +67,4 @@ class PhotoRepoImpl @Inject constructor(
     }
 
 }
+

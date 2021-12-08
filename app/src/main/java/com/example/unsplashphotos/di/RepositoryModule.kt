@@ -26,3 +26,4 @@ abstract class RepositoryModule {
     abstract fun getPhotoRepository(photoRepoImpl: PhotoRepoImpl): PhotoRepo
 
 }
+
