@@ -10,5 +10,4 @@ data class Photo(
     val altDescription: String,
     @SerializedName("urls")
     val urls: Urls
-
 )

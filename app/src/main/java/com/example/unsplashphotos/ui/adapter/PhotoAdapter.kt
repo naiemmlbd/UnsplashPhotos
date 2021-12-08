@@ -57,16 +57,4 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
 
         }
     }
-
-
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    fun getImage(id: String): Bitmap?{
-//
-//        if (cache.getBitmap(id) == null){
-////            val options = BitmapFactory.Options()
-////            options.inPreferredColorSpace = Bitmap.Config.ARGB_8888
-////            val bitmap = BitmapFactory.decodeFile()
-//        }
-//
-//    }
 }
