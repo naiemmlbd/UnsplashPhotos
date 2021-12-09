@@ -11,23 +11,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
+import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.lang.Exception
@@ -36,11 +32,14 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PhotoFullScreenFragment : Fragment() {
     companion object {
-        private const val STORAGE_PERMISSION_CODE = 1000
+        private const val STORAGE_PERMISSION_CODE = 100
     }
 
     @Inject
     lateinit var imageLoader: ImageLoader
+
+    @Inject
+    lateinit var downloaderUtils: DownloaderUtils
     private lateinit var binding: FragmentPhotoFullScreenBinding
     private val photoFullViewModel by viewModels<PhotoFullViewModel>()
     private lateinit var photoId: String
@@ -77,8 +76,40 @@ class PhotoFullScreenFragment : Fragment() {
             // Requesting the permission
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
         } else {
-            saveToGallery()
+            downloaderUtils.downloadPhoto(downloadLink, photoId)
         }
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        displayPhoto()
+    }
+
+    private fun displayPhoto() {
+        binding.progressBar.visibility = View.VISIBLE
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            photoFullViewModel.getPhotoById(photoId)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                photoFullViewModel.flow.collect {
+                    if (it != null) {
+                        binding.photoFullScreen = it
+                        loadPhoto(it.urls.regular)
+                        downloadLink = it.links.download
+                        binding.progressBar.visibility = View.GONE
+                    } else {
+                        binding.progressBar.visibility = View.GONE
+                        binding.textTitle.text = getString(R.string.no_data)
+                        Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun loadPhoto(url: String) {
+        imageLoader.load(url, binding.imgPhoto)
     }
 
     //To save image from the imageView
@@ -118,37 +149,6 @@ class PhotoFullScreenFragment : Fragment() {
 
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        displayPhoto()
-    }
-
-    private fun displayPhoto() {
-        binding.progressBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            photoFullViewModel.getPhotoById(photoId)
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoFullViewModel.flow.collect {
-                    if (it != null) {
-                        binding.photoFullScreen = it
-                        loadPhoto(it.urls.regular)
-                        do
-                        binding.progressBar.visibility = View.GONE
-                    } else {
-                        binding.progressBar.visibility = View.GONE
-                        binding.textTitle.text = getString(R.string.no_data)
-                        Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-
-    }
-
-    private fun loadPhoto(url: String) {
-        imageLoader.load(url, binding.imgPhoto)
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -156,7 +156,7 @@ class PhotoFullScreenFragment : Fragment() {
     ) {
         if (requestCode == STORAGE_PERMISSION_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveToGallery()
+                downloaderUtils.downloadPhoto(downloadLink, photoId)
             } else {
                 Toast.makeText(activity, "Storage Permission Denied", Toast.LENGTH_SHORT).show()
             }
