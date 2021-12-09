@@ -1,6 +1,5 @@
 package com.example.unsplashphotos.ui
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -17,11 +16,8 @@ import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
