@@ -7,7 +7,6 @@ import javax.inject.Inject
 class  PhotoCacheDataSourceImpl @Inject constructor () : PhotoCacheDataSource {
 
     var cache = LruBitmapCache()
-    private var photoList = ArrayList<Photo>()
     override suspend fun getPhotoFromCache(page: Int): List<Photo>? {
         return cache.getBitmap(page)
     }

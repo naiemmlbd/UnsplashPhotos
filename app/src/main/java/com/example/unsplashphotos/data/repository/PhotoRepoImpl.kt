@@ -33,8 +33,8 @@ class PhotoRepoImpl @Inject constructor(
         return photoStore
     }
 
-    suspend fun getPhotosFromCache(page: Int): List<Photo> {
-        var photoList: List<Photo> = ArrayList<Photo>()
+    private suspend fun getPhotosFromCache(page: Int): List<Photo> {
+        val photoList: List<Photo>
         val cachePhotos = photoCacheDataSource.getPhotoFromCache(page)
         if ( cachePhotos == null) {
             photoList = getPhotosFromAPI(page)
