@@ -60,6 +60,18 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:contentDescription="@string/download" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/share_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toTopOf="@+id/save_fab"
+            app:layout_constraintEnd_toEndOf="@+id/save_fab"
+            app:layout_constraintStart_toStartOf="@+id/save_fab"
+            app:srcCompat="@drawable/ic_baseline_share_24"
+            android:contentDescription="@string/share" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <data>

@@ -5,4 +5,7 @@
     <string name="no_data">No Data Available</string>
     <string name="download">Download</string>
     <string name="downlaoding">File is downloading...</string>
+    <string name="share">Share</string>
+    <string name="sharevia">Share via</string>
+    <string name="storageperm">Storage Permission Denied</string>
 </resources>

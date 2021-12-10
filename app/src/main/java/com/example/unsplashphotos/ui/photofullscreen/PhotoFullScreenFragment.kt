@@ -1,10 +1,8 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.os.Environment
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,12 +19,11 @@ import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
+import com.example.unsplashphotos.ui.ViewUtils
+import com.example.unsplashphotos.ui.ViewUtils.Companion.shareImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -45,6 +42,7 @@ class PhotoFullScreenFragment : Fragment() {
     private lateinit var photoId: String
     private lateinit var imageView: ImageView
     private lateinit var downloadLink: String
+    private lateinit var shareHtmlLink: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +61,18 @@ class PhotoFullScreenFragment : Fragment() {
                 STORAGE_PERMISSION_CODE
             )
         }
+
+        binding.shareFab.setOnClickListener {
+            shareImage(requireContext(), photoId, imageView)
+        }
         return binding.root
+    }
+
+    private fun sharePhotoLink() {
+        val share = Intent(Intent.ACTION_SEND)
+        share.type = "text/html"
+        share.putExtra(Intent.EXTRA_TEXT, shareHtmlLink)
+        startActivity(Intent.createChooser(share, getString(R.string.sharevia)))
     }
 
     // Function to check and request permission.
@@ -96,57 +105,21 @@ class PhotoFullScreenFragment : Fragment() {
                         binding.photoFullScreen = it
                         loadPhoto(it.urls.regular)
                         downloadLink = it.links.download
+                        shareHtmlLink = it.links.html
                         binding.progressBar.visibility = View.GONE
                     } else {
                         binding.progressBar.visibility = View.GONE
                         binding.textTitle.text = getString(R.string.no_data)
-                        Toast.makeText(activity, "No data available", Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
             }
         }
-
     }
 
     private fun loadPhoto(url: String) {
         imageLoader.load(url, binding.imgPhoto)
-    }
-
-    //To save image from the imageView
-    private fun saveToGallery() {
-
-        val bitmapDrawable: BitmapDrawable = imageView.drawable as BitmapDrawable
-        val bitmap = bitmapDrawable.bitmap
-        var outputStream: FileOutputStream? = null
-        val file: File = Environment.getExternalStorageDirectory()
-        val dir = File(file.absolutePath + "/Download")
-        dir.mkdirs()
-        val fileName = "$photoId.jpeg"
-        val outputFile = File(dir, fileName)
-
-        try {
-            outputStream = FileOutputStream(outputFile)
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-        val saveStatus = bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        if (saveStatus) {
-            Toast.makeText(activity, "Photo Saved", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(activity, "Opps! Couldn't Save", Toast.LENGTH_SHORT).show()
-        }
-
-        try {
-            outputStream?.flush()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-        try {
-            outputStream?.close()
-        } catch (exception: Exception) {
-            exception.printStackTrace()
-        }
-
     }
 
     override fun onRequestPermissionsResult(
@@ -158,9 +131,8 @@ class PhotoFullScreenFragment : Fragment() {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 downloaderUtils.downloadPhoto(downloadLink, photoId)
             } else {
-                Toast.makeText(activity, "Storage Permission Denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, getString(R.string.storageperm), Toast.LENGTH_SHORT).show()
             }
-
         }
     }
 }
