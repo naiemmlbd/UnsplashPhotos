@@ -16,13 +16,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader{
+    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
         return ImageLoader(context)
     }
 
     @Provides
     @Singleton
-    fun provideDownloader(@ApplicationContext context: Context): DownloaderUtils{
+    fun provideDownloader(@ApplicationContext context: Context): DownloaderUtils {
         return DownloaderUtils(context)
     }
 }

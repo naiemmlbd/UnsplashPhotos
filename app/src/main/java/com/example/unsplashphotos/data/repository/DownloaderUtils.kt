@@ -20,12 +20,8 @@ class DownloaderUtils(private val context: Context) {
         if (!directory.exists()) {
             directory.mkdirs()
         }
-
-        val downloadManager =
-            context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-
+        val downloadManager = context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
         val downloadUri = Uri.parse(url)
-
         val request = DownloadManager.Request(downloadUri).apply {
             setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
                 .setAllowedOverRoaming(false)
@@ -37,7 +33,6 @@ class DownloaderUtils(private val context: Context) {
 
         val downloadId = downloadManager.enqueue(request)
         val query = DownloadManager.Query().setFilterById(downloadId)
-
         var finishDownload = false
         while (!finishDownload) {
             val cursor: Cursor = downloadManager.query(query)
@@ -70,7 +65,6 @@ class DownloaderUtils(private val context: Context) {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-
                 }
             }
         }
