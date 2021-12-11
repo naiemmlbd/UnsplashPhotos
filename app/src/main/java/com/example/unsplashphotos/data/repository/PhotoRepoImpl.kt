@@ -60,9 +60,6 @@ class PhotoRepoImpl @Inject constructor(
         } catch (exception: Exception) {
             Timber.e(exception.message.toString())
         }
-
-
-        Timber.tag("===>").d("CheckPoint 2%s", photoList);
         return photoList
     }
 

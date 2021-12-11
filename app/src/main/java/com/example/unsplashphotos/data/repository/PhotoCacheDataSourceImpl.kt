@@ -6,7 +6,9 @@ import javax.inject.Inject
 
 class  PhotoCacheDataSourceImpl @Inject constructor () : PhotoCacheDataSource {
 
-    var cache = LruBitmapCache()
+    var maxMemory:Int = ((Runtime.getRuntime().maxMemory() / 1024).toInt())
+    private val maxCacheSize =maxMemory / 8
+    var cache = LruBitmapCache(maxCacheSize)
     override suspend fun getPhotoFromCache(page: Int): List<Photo>? {
         return cache.getBitmap(page)
     }
