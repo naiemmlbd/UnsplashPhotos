@@ -108,16 +108,21 @@ class PhotoFullScreenFragment : Fragment() {
             }
         }
     }
+
     private fun handlePhotoFullResult(it: Resource<Photo>) {
         when (it.status) {
-            Status.LOADING-> {
+            Status.LOADING -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.progressBar.show()
             }
             Status.SUCCESS -> {
                 binding.progressBar.visibility = View.INVISIBLE
                 binding.photoFullScreen = it.data
-                it.data?.urls?.let { it1 -> loadPhoto(it1.regular) }
+                it.data?.urls?.let { it1 ->
+                    loadPhoto(it1.regular)
+                    downloadLink = it.data.links.download
+                }
+
                 binding.progressBar.hide()
             }
             Status.ERROR -> {
