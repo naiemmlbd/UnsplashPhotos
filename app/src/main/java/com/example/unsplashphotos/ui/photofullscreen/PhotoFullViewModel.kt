@@ -2,7 +2,6 @@ package com.example.unsplashphotos.ui.photofullscreen
 
 
 import androidx.lifecycle.ViewModel
-import com.example.unsplashphotos.utils.Resource
 import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.domain.usecase.PhotoFullScreenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,14 +14,14 @@ import javax.inject.Inject
 class PhotoFullViewModel @Inject constructor(private val photoFullScreenUseCase: PhotoFullScreenUseCase) :
     ViewModel() {
 
-    lateinit var flow: Flow<Resource<Photo>>
+    lateinit var flow: Flow<Photo?>
 
     suspend fun getPhotoById(id: String) {
         flow = flow {
-            val photo = photoFullScreenUseCase.getSinglePhoto(id)
+            val photo = photoFullScreenUseCase.execute(id)
             Timber.tag("===>").i("Photo: %s", photo)
-            emit(Resource.loading())
             emit(photo)
         }
     }
+
 }
