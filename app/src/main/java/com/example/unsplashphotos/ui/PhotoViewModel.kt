@@ -14,6 +14,9 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoViewModel @Inject constructor(private val photoUseCase: PhotoUseCase) : ViewModel() {
 
+    init {
+        fetchPhotos()
+    }
     var photos: Flow<PagingData<Photo>>? = null
 
     fun fetchPhotos() {
