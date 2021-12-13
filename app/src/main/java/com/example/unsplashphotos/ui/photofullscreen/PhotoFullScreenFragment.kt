@@ -16,10 +16,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
+import com.example.unsplashphotos.utils.Resource
+import com.example.unsplashphotos.utils.Status
 import com.example.unsplashphotos.common.ImageLoader
+import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
-import com.example.unsplashphotos.ui.ViewUtils
 import com.example.unsplashphotos.ui.ViewUtils.Companion.shareImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -101,20 +103,31 @@ class PhotoFullScreenFragment : Fragment() {
             photoFullViewModel.getPhotoById(photoId)
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoFullViewModel.flow.collect {
-                    if (it != null) {
-                        binding.photoFullScreen = it
-                        loadPhoto(it.urls.regular)
-                        downloadLink = it.links.download
-                        shareHtmlLink = it.links.html
-                        binding.progressBar.visibility = View.GONE
-                    } else {
-                        binding.progressBar.visibility = View.GONE
-                        binding.textTitle.text = getString(R.string.no_data)
-                        Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
-                            .show()
-                    }
+                    handlePhotoFullResult(it)
                 }
             }
+        }
+    }
+    private fun handlePhotoFullResult(it: Resource<Photo>) {
+        when (it.status) {
+            Status.LOADING-> {
+                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.show()
+            }
+            Status.SUCCESS -> {
+                binding.progressBar.visibility = View.INVISIBLE
+                binding.photoFullScreen = it.data
+                it.data?.urls?.let { it1 -> loadPhoto(it1.regular) }
+                binding.progressBar.hide()
+            }
+            Status.ERROR -> {
+                binding.progressBar.visibility = View.INVISIBLE
+                binding.textTitle.text = getString(R.string.no_data)
+                Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
+                    .show()
+                binding.progressBar.hide()
+            }
+            else -> {}
         }
     }
 

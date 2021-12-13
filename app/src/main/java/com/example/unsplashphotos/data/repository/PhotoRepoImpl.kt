@@ -1,5 +1,6 @@
 package com.example.unsplashphotos.data.repository
 
+import com.example.unsplashphotos.utils.Resource
 import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.domain.repository.PhotoRepo
 import timber.log.Timber
@@ -12,24 +13,16 @@ class PhotoRepoImpl @Inject constructor(
         return getPhotosFromAPI(page)
     }
 
-    override suspend fun getPhotoById(photoId: String): Photo? {
+    override suspend fun getPhotoById(photoId: String): Resource<Photo> {
 
-        var photoStore: Photo? = null
 
-        try {
-            val response = photoDataSource.getPhotoById(photoId)
+        val response = photoDataSource.getPhotoById(photoId)
+        return if (response.isSuccessful) {
             val body = response.body()
-            Timber.tag("T===>").i("Photo: %s", body)
-
-            if (body != null) {
-                photoStore = body
-            }
-
-        } catch (exception: Exception) {
-            Timber.e(exception.message.toString())
+            Resource.success(body)
+        }else{
+            Resource.error(response.message())
         }
-
-        return photoStore
     }
 
 
