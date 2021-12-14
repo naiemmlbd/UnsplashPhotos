@@ -20,7 +20,7 @@ import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -88,7 +88,7 @@ class PhotoFullScreenFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             photoFullViewModel.getPhotoById(photoId)
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoFullViewModel.flow.collect {
+                photoFullViewModel.stateFlow.collectLatest {
                     if (it != null) {
                         binding.photoFullScreen = it
                         loadPhoto(it.urls.regular)

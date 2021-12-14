@@ -34,12 +34,11 @@ class ShareUtils() {
             var saveStatus = false
             val bitmapDrawable: BitmapDrawable = imageView.drawable as BitmapDrawable
             val bitmap = bitmapDrawable.bitmap
-            var outputStream: FileOutputStream?
             val directory = context.cacheDir
             val fileName = "$photoId.jpeg"
             val outputFile = File(directory, fileName)
             try {
-                outputStream = FileOutputStream(outputFile)
+                val outputStream = FileOutputStream(outputFile)
                 saveStatus = bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                 outputStream.flush()
                 outputStream.close()
