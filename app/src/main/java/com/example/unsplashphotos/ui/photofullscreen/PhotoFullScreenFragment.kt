@@ -19,8 +19,7 @@ import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
-import com.example.unsplashphotos.ui.ViewUtils
-import com.example.unsplashphotos.ui.ViewUtils.Companion.shareImage
+import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
