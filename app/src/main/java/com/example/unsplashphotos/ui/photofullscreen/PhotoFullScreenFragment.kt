@@ -1,7 +1,6 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,34 +8,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
-import com.example.unsplashphotos.utils.Resource
-import com.example.unsplashphotos.utils.Status
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
-import com.example.unsplashphotos.ui.ViewUtils.Companion.shareImage
+import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
+import com.example.unsplashphotos.utils.Resource
+import com.example.unsplashphotos.utils.Status
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoFullScreenFragment : Fragment() {
-    companion object {
-        private const val STORAGE_PERMISSION_CODE = 100
-    }
 
     @Inject
     lateinit var imageLoader: ImageLoader
-
     @Inject
     lateinit var downloaderUtils: DownloaderUtils
     private lateinit var binding: FragmentPhotoFullScreenBinding
@@ -58,10 +52,7 @@ class PhotoFullScreenFragment : Fragment() {
         binding = FragmentPhotoFullScreenBinding.inflate(inflater)
         imageView = binding.imgPhoto
         binding.saveFab.setOnClickListener {
-            checkPermission(
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                STORAGE_PERMISSION_CODE
-            )
+            activityResultLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
         binding.shareFab.setOnClickListener {
@@ -77,19 +68,17 @@ class PhotoFullScreenFragment : Fragment() {
         startActivity(Intent.createChooser(share, getString(R.string.sharevia)))
     }
 
-    // Function to check and request permission.
-    private fun checkPermission(permission: String, requestCode: Int) {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                permission
-            ) == PackageManager.PERMISSION_DENIED
-        ) {
-            // Requesting the permission
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(permission), requestCode)
-        } else {
-            downloaderUtils.downloadPhoto(downloadLink, photoId)
+    private val activityResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted ->
+            // Handle Permission granted/rejected
+            if (isGranted) {
+                downloaderUtils.downloadPhoto(downloadLink, photoId)
+            } else {
+                Toast.makeText(activity, getString(R.string.storageperm), Toast.LENGTH_SHORT).show()
+            }
         }
-    }
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -102,15 +91,15 @@ class PhotoFullScreenFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
             photoFullViewModel.getPhotoById(photoId)
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoFullViewModel.flow.collect {
+                photoFullViewModel.stateFlow.collectLatest {
                     handlePhotoFullResult(it)
                 }
             }
         }
     }
 
-    private fun handlePhotoFullResult(it: Resource<Photo>) {
-        when (it.status) {
+    private fun handlePhotoFullResult(it: Resource<Photo>?) {
+        when (it?.status) {
             Status.LOADING -> {
                 binding.progressBar.visibility = View.VISIBLE
                 binding.progressBar.show()
@@ -122,7 +111,6 @@ class PhotoFullScreenFragment : Fragment() {
                     loadPhoto(it1.regular)
                     downloadLink = it.data.links.download
                 }
-
                 binding.progressBar.hide()
             }
             Status.ERROR -> {
@@ -138,19 +126,5 @@ class PhotoFullScreenFragment : Fragment() {
 
     private fun loadPhoto(url: String) {
         imageLoader.load(url, binding.imgPhoto)
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                downloaderUtils.downloadPhoto(downloadLink, photoId)
-            } else {
-                Toast.makeText(activity, getString(R.string.storageperm), Toast.LENGTH_SHORT).show()
-            }
-        }
     }
 }

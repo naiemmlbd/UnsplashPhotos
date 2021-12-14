@@ -6,23 +6,18 @@ import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.domain.usecase.PhotoFullScreenUseCase
 import com.example.unsplashphotos.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import timber.log.Timber
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(private val photoFullScreenUseCase: PhotoFullScreenUseCase) :
     ViewModel() {
 
-    lateinit var flow: Flow<Resource<Photo>>
+    private val mutableStateFlow = MutableStateFlow<Resource<Photo>?>(null)
+    val stateFlow = mutableStateFlow.asStateFlow()
 
     suspend fun getPhotoById(id: String) {
-        flow = flow {
-            val photo = photoFullScreenUseCase.getSinglePhoto(id)
-            Timber.tag("===>").i("Photo: %s", photo)
-            emit(photo)
-        }
+        mutableStateFlow.value =photoFullScreenUseCase.getSinglePhoto(id)
     }
-
 }

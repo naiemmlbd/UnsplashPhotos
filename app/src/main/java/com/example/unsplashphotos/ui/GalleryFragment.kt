@@ -60,7 +60,7 @@ class GalleryFragment : Fragment() {
     private fun displayPhotos() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoViewModel.photos?.collect {
+                photoViewModel.photos.collect {
                     photoAdapter.submitData(it)
                 }
             }
