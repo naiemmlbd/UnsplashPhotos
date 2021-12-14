@@ -78,6 +78,4 @@
             name="photoFullScreen"
             type="com.example.unsplashphotos.data.model.Photo" />
     </data>
-
-
 </layout>
