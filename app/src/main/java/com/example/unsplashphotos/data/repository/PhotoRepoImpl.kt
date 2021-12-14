@@ -14,35 +14,32 @@ class PhotoRepoImpl @Inject constructor(
     }
 
     override suspend fun getPhotoById(photoId: String): Photo? {
-
-        var photoStore: Photo? = null
-
-        try {
-            val response = photoDataSource.getPhotoById(photoId)
-            val body = response.body()
-            Timber.tag("T===>").i("Photo: %s", body)
-
-            if (body != null) {
-                photoStore = body
-            }
-
-        } catch (exception: Exception) {
-            Timber.e(exception.message.toString())
-        }
-
-        return photoStore
+        return getPhotoFromCache(photoId)
     }
 
     private suspend fun getPhotosFromCache(page: Int): List<Photo> {
         val photoList: List<Photo>
-        val cachePhotos = photoCacheDataSource.getPhotoFromCache(page)
-        if ( cachePhotos == null) {
+        val cachePhotos = photoCacheDataSource.getPhotosFromCache(page)
+        if (cachePhotos == null) {
             photoList = getPhotosFromAPI(page)
-            photoCacheDataSource.savePhotoToCache(page, photoList)
-        }else{
+            photoCacheDataSource.savePhotosToCache(page, photoList)
+        } else {
             photoList = cachePhotos
         }
         return photoList
+    }
+
+    private suspend fun getPhotoFromCache(photoId: String): Photo? {
+        val photo: Photo?
+        val cachedPhoto = photoCacheDataSource.getPhotoFromCache(photoId)
+        if (cachedPhoto == null) {
+            photo = getPhotoFromApiById(photoId)
+            if (photo != null)
+                photoCacheDataSource.savePhotoToCache(photoId, photo)
+        } else {
+            photo = cachedPhoto
+        }
+        return photo
     }
 
     private suspend fun getPhotosFromAPI(page: Int): List<Photo> {
@@ -63,5 +60,22 @@ class PhotoRepoImpl @Inject constructor(
         return photoList
     }
 
-}
+    private suspend fun getPhotoFromApiById(photoId: String): Photo? {
+        var photoStore: Photo? = null
 
+        try {
+            val response = photoDataSource.getPhotoById(photoId)
+            val body = response.body()
+            Timber.tag("T===>").i("Photo: %s", body)
+
+            if (body != null) {
+                photoStore = body
+            }
+
+        } catch (exception: Exception) {
+            Timber.e(exception.message.toString())
+        }
+
+        return photoStore
+    }
+}

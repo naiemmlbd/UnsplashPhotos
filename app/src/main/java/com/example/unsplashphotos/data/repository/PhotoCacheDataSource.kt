@@ -5,6 +5,8 @@ import com.example.unsplashphotos.data.model.Photo
 
 interface PhotoCacheDataSource {
 
-    suspend fun getPhotoFromCache(page: Int):List<Photo>?
-    suspend fun savePhotoToCache(page: Int, photos:List<Photo>)
+    suspend fun getPhotosFromCache(page: Int):List<Photo>?
+    suspend fun savePhotosToCache(page: Int, photos:List<Photo>)
+    suspend fun getPhotoFromCache(photoId: String):Photo?
+    suspend fun savePhotoToCache(photoId: String, photo:Photo)
 }

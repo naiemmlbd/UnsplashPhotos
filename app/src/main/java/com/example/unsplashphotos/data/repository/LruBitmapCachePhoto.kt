@@ -3,17 +3,18 @@ package com.example.unsplashphotos.data.repository
 import android.util.LruCache
 import com.example.unsplashphotos.data.model.Photo
 
-class LruBitmapCache constructor(sizeInKB: Int = defaultLruCacheSize):
-    LruCache<Int, List<Photo>>(sizeInKB){
 
-    override fun sizeOf(key: Int, value: List<Photo>): Int =  1024
+class LruBitmapCachePhoto constructor(sizeInKB: Int = defaultLruCacheSize):
+    LruCache<String, Photo>(sizeInKB){
 
-    fun getBitmap(page: Int): List<Photo>? {
-        return get(page)
+    override fun sizeOf(key: String, value: Photo): Int =  1024 * 2
+
+    fun getBitmap(photoId: String): Photo? {
+        return get(photoId)
     }
 
-    fun putBitmap(page: Int, photoList: List<Photo>) {
-        put(page, photoList)
+    fun putBitmap(photoId: String, photo: Photo) {
+        put(photoId, photo)
     }
 
     companion object {
