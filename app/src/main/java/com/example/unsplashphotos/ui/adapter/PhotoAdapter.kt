@@ -33,7 +33,6 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
         RecyclerView.ViewHolder(binding.root) {
         fun bind(photo: Photo, selectListener: (Photo, FragmentNavigator.Extras) -> Unit) {
             binding.photo = photo
-
             binding.root.setOnClickListener {
                 val extras = FragmentNavigatorExtras(
                     binding.photoThumbnail to "image${photo.id}"

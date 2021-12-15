@@ -41,9 +41,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter { selectedPhoto: Photo, extra ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
-                selectedPhoto.id
-            )
+            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(selectedPhoto.id)
             findNavController().navigate(action)
         }
 

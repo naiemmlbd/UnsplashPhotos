@@ -9,7 +9,7 @@
         android:id="@+id/galleryFragment"
         android:name="com.example.unsplashphotos.ui.GalleryFragment"
         android:label="fragment_gallery"
-        tools:layout="@layout/fragment_gallery" >
+        tools:layout="@layout/fragment_gallery">
         <action
             android:id="@+id/action_galleryFragment_to_photoFullScreenFragment"
             app:destination="@id/photoFullScreenFragment" />
