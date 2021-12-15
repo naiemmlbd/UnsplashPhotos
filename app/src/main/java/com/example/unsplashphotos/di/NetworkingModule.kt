@@ -1,6 +1,5 @@
 package com.example.unsplashphotos.di
 
-import com.example.unsplashphotos.BuildConfig
 import com.example.unsplashphotos.BuildConfig.BASE_URL
 import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
 import com.google.gson.Gson
