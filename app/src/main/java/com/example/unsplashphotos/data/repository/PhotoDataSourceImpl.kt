@@ -1,6 +1,7 @@
 package com.example.unsplashphotos.data.repository
 
 import com.example.unsplashphotos.BuildConfig
+import com.example.unsplashphotos.BuildConfig.CLIENT_ID
 import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
 import com.example.unsplashphotos.data.model.Photo
 import retrofit2.Response
@@ -13,13 +14,13 @@ class PhotoDataSourceImpl @Inject constructor(
 ) : PhotoDataSource {
 
     override suspend fun getPhotos(page: Int): Response<List<Photo>> {
-        val store = photoRemoteDataSource.getPhotos(BuildConfig.CLIENT_ID, page)
+        val store = photoRemoteDataSource.getPhotos(CLIENT_ID, page)
         Timber.tag("===>").d("photos: %s", store)
         return store
     }
 
     override suspend fun getPhotoById(photoId: String): Response<Photo> {
-        val photo = photoRemoteDataSource.getPhotoById(photoId, BuildConfig.CLIENT_ID)
+        val photo = photoRemoteDataSource.getPhotoById(photoId, CLIENT_ID)
         Timber.d("CheckPhoto: %s", photo)
         return photo
     }

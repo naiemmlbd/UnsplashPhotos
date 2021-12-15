@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
-
     private lateinit var photoAdapter: PhotoAdapter
     private lateinit var binding: FragmentGalleryBinding
     private val photoViewModel by viewModels<PhotoViewModel>()
@@ -42,9 +41,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter { selectedPhoto: Photo, extra ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
-                selectedPhoto.id
-            )
+            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(selectedPhoto.id)
             findNavController().navigate(action)
         }
 

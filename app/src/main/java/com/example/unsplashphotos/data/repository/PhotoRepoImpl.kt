@@ -9,7 +9,7 @@ class PhotoRepoImpl @Inject constructor(
     private val photoDataSource: PhotoDataSource,
     private val photoCacheDataSource: PhotoCacheDataSource
 ) : PhotoRepo {
-    override suspend fun getPhotos(page: Int): List<Photo>? {
+    override suspend fun getPhotos(page: Int): List<Photo> {
         return getPhotosFromCache(page)
     }
 

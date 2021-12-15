@@ -21,7 +21,6 @@ class ImageLoader (private val context: Context) {
             .into(imageView)
     }
 
-
     fun load(
         bitmap: Bitmap,
         imageView: ImageView,
@@ -51,5 +50,4 @@ class ImageLoader (private val context: Context) {
             .load(drawable)
             .into(imageView)
     }
-
 }
