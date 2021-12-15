@@ -17,7 +17,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 @InstallIn(SingletonComponent::class)
 object NetworkingModule {
 
-
     private val interceptor = HttpLoggingInterceptor().apply {
         this.level = HttpLoggingInterceptor.Level.BODY
     }
@@ -44,5 +43,4 @@ object NetworkingModule {
     @Provides
     fun provideApiService(retrofit: Retrofit): PhotoRemoteDataSource =
         retrofit.create(PhotoRemoteDataSource::class.java)
-
 }

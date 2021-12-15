@@ -1,6 +1,7 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -25,7 +26,6 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoFullScreenFragment : Fragment() {
-
     @Inject
     lateinit var imageLoader: ImageLoader
     @Inject
@@ -48,12 +48,13 @@ class PhotoFullScreenFragment : Fragment() {
     ): View {
         binding = FragmentPhotoFullScreenBinding.inflate(inflater)
         imageView = binding.imgPhoto
+        val bitmapDrawable = imageView.drawable as? BitmapDrawable
         binding.saveFab.setOnClickListener {
             activityResultLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
-
         binding.shareFab.setOnClickListener {
-            shareImage(requireContext(), photoId, imageView)
+            if (bitmapDrawable != null)
+                shareImage(requireContext(), photoId, bitmapDrawable)
         }
         return binding.root
     }
@@ -69,14 +70,12 @@ class PhotoFullScreenFragment : Fragment() {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
-            // Handle Permission granted/rejected
             if (isGranted) {
                 downloaderUtils.downloadPhoto(downloadLink, photoId)
             } else {
                 Toast.makeText(activity, getString(R.string.storageperm), Toast.LENGTH_SHORT).show()
             }
         }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

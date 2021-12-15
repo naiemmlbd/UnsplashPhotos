@@ -21,7 +21,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
-
     private lateinit var photoAdapter: PhotoAdapter
     private lateinit var binding: FragmentGalleryBinding
     private val photoViewModel by viewModels<PhotoViewModel>()

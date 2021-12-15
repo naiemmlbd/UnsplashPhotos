@@ -29,7 +29,6 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
         }
     }
 
-
     class PhotoViewHolder(private val binding: ItemPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(photo: Photo, selectListener: (Photo, FragmentNavigator.Extras) -> Unit) {
@@ -42,7 +41,6 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
                 selectListener(photo, extras)
             }
         }
-
     }
 
     companion object {
@@ -54,7 +52,6 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
             override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
                 return oldItem.id == newItem.id
             }
-
         }
     }
 }

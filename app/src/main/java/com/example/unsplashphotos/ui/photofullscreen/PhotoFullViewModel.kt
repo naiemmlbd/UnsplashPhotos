@@ -12,7 +12,6 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(private val photoFullScreenUseCase: PhotoFullScreenUseCase) :
     ViewModel() {
-
     private val mutableStateFlow = MutableStateFlow<Photo?>(null)
     val stateFlow = mutableStateFlow.asStateFlow()
 
