@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
@@ -51,9 +50,7 @@ class GalleryFragment : Fragment() {
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
         photoViewModel
-        val staggeredGridLayoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
-        staggeredGridLayoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_NONE
-        binding.photosRecyclerView.layoutManager = staggeredGridLayoutManager
+        binding.photosRecyclerView.layoutManager = GridLayoutManager(requireContext(),2,LinearLayoutManager.VERTICAL,false)
         displayPhotos()
     }
 
