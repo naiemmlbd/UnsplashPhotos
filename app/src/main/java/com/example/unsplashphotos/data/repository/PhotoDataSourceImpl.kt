@@ -1,6 +1,5 @@
 package com.example.unsplashphotos.data.repository
 
-import com.example.unsplashphotos.BuildConfig
 import com.example.unsplashphotos.BuildConfig.CLIENT_ID
 import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
 import com.example.unsplashphotos.data.model.Photo

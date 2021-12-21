@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotoViewModel @Inject constructor(private val photoUseCase: PhotoUseCase) : ViewModel() {
+class PhotoViewModel @Inject constructor(photoUseCase: PhotoUseCase) : ViewModel() {
 
     val photos: Flow<PagingData<Photo>> = photoUseCase.fetchPhotos().cachedIn(viewModelScope)
 }

@@ -28,6 +28,7 @@ class ImageLoader (private val context: Context) {
     ) {
         Glide.with(context)
             .load(bitmap)
+            .override(imageView.width)
             .placeholder(placeholder)
             .into(imageView)
     }
