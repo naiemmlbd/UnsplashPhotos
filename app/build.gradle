@@ -8,7 +8,7 @@ plugins {
 
 android {
     compileSdk 31
-
+    def BASE_URL = "BASE_URL"
     defaultConfig {
         applicationId "com.example.unsplashphotos"
         minSdk 24
@@ -17,7 +17,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField("String", "BASE_URL", BASE_URL)
+        buildConfigField("String", BASE_URL, '"https://api.unsplash.com/"')
     }
 
     buildTypes {
@@ -26,18 +26,19 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
+    def CLIENT_ID = "CLIENT_ID"
     flavorDimensions "dev"
     productFlavors {
         create("free") {
             dimension = "dev"
             applicationId = "com.example.unsplashphotos.free"
-            buildConfigField("String", "CLIENT_ID", CLIENT_ID)
+            buildConfigField("String", CLIENT_ID, '"RUvTzcL-6uXdrLTWpudHjLa9MqIvBcjPmJ8bqJwFpQg"')
         }
 
         create("paid") {
             dimension = "dev"
             applicationId = "com.example.unsplashphotos.paid"
+            buildConfigField("String", CLIENT_ID, "")
         }
     }
     compileOptions {

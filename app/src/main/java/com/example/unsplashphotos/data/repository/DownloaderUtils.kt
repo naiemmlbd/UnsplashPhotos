@@ -47,7 +47,7 @@ class DownloaderUtils(private val context: Context) {
                     DownloadManager.STATUS_RUNNING -> {
                         Toast.makeText(
                             context,
-                            "Downloading...",
+                            context.getString(R.string.downloading),
                             Toast.LENGTH_LONG
                         ).show()
                     }
@@ -55,13 +55,13 @@ class DownloaderUtils(private val context: Context) {
                         finishDownload = true
                         Toast.makeText(
                             context,
-                            "Image downloaded successfully in $directory", Toast.LENGTH_SHORT
+                            context.getString(R.string.downloadSuccess)+directory, Toast.LENGTH_SHORT
                         ).show()
                     }
                     else -> {
                         Toast.makeText(
                             context,
-                            "\"There's nothing to download\"",
+                            context.getString(R.string.downloadNothing),
                             Toast.LENGTH_SHORT
                         ).show()
                     }

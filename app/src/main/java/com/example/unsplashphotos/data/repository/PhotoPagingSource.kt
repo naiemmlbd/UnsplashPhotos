@@ -10,11 +10,8 @@ import javax.inject.Singleton
 @Singleton
 class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepo) : PagingSource<Int, Photo>() {
 
-
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
-
         val page = params.key ?: 1
-
         val photoResult = photoRepo.getPhotos(page)
         if (photoResult != null) {
             return LoadResult.Page(
@@ -23,7 +20,6 @@ class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepo) : 
                 page + 1
             )
         }
-
         return LoadResult.Error(Exception("Error Occurred"))
     }
 

@@ -21,7 +21,6 @@ class ImageLoader (private val context: Context) {
             .into(imageView)
     }
 
-
     fun load(
         bitmap: Bitmap,
         imageView: ImageView,
@@ -29,6 +28,7 @@ class ImageLoader (private val context: Context) {
     ) {
         Glide.with(context)
             .load(bitmap)
+            .override(imageView.width)
             .placeholder(placeholder)
             .into(imageView)
     }
@@ -51,5 +51,4 @@ class ImageLoader (private val context: Context) {
             .load(drawable)
             .into(imageView)
     }
-
 }

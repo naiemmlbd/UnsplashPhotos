@@ -1,6 +1,7 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -40,25 +41,25 @@ class PhotoFullScreenFragment : Fragment() {
     private lateinit var downloadLink: String
     private lateinit var shareHtmlLink: String
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        photoId = arguments?.getString("photoId").toString()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPhotoFullScreenBinding.inflate(inflater)
-        imageView = binding.imgPhoto
         binding.saveFab.setOnClickListener {
             activityResultLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
-
         binding.shareFab.setOnClickListener {
-            shareImage(requireContext(), photoId, imageView)
+            share()
         }
         return binding.root
+    }
+
+    private fun share() {
+        val bitmapDrawable = binding.imgPhoto.drawable as BitmapDrawable
+        val photoId = photoFullViewModel.photoId
+        if (photoId != null)
+            shareImage(requireContext(), photoId, bitmapDrawable)
     }
 
     private fun sharePhotoLink() {
@@ -72,14 +73,12 @@ class PhotoFullScreenFragment : Fragment() {
         registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted ->
-            // Handle Permission granted/rejected
             if (isGranted) {
-                downloaderUtils.downloadPhoto(downloadLink, photoId)
+                photoFullViewModel.onClickDownloadFab(downloadLink)
             } else {
                 Toast.makeText(activity, getString(R.string.storageperm), Toast.LENGTH_SHORT).show()
             }
         }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,7 +88,7 @@ class PhotoFullScreenFragment : Fragment() {
     private fun displayPhoto() {
         binding.progressBar.visibility = View.VISIBLE
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            photoFullViewModel.getPhotoById(photoId)
+            photoFullViewModel.getPhotoById()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoFullViewModel.stateFlow.collectLatest {
                     handlePhotoFullResult(it)

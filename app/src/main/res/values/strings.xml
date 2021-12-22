@@ -8,4 +8,7 @@
     <string name="share">Share</string>
     <string name="sharevia">Share via</string>
     <string name="storageperm">Storage Permission Denied</string>
+    <string name="downloading">Downloading...</string>
+    <string name="downloadSuccess">Image downloaded successfully in </string>
+    <string name="downloadNothing">There\'s nothing to download</string>
 </resources>

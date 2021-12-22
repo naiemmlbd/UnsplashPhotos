@@ -14,8 +14,6 @@ class PhotoRepoImpl @Inject constructor(
     }
 
     override suspend fun getPhotoById(photoId: String): Resource<Photo> {
-
-
         val response = photoDataSource.getPhotoById(photoId)
         return if (response.isSuccessful) {
             val body = response.body()
@@ -25,7 +23,6 @@ class PhotoRepoImpl @Inject constructor(
         }
     }
 
-
     private suspend fun getPhotosFromAPI(page: Int): List<Photo> {
         var photoList = listOf<Photo>()
 
@@ -33,18 +30,13 @@ class PhotoRepoImpl @Inject constructor(
             val response = photoDataSource.getPhotos(page)
             val body = response.body()
             Timber.tag("===>").d("CheckPoint 1%s", body);
-
             if (body != null) {
                 photoList = body
             }
-
         } catch (exception: Exception) {
             Timber.e(exception.message.toString())
         }
-
-
         Timber.tag("===>").d("CheckPoint 2%s", photoList);
         return photoList
     }
-
 }

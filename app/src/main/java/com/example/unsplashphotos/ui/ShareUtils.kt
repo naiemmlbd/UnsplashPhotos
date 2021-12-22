@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
-import android.widget.ImageView
 import androidx.core.content.FileProvider.getUriForFile
 import com.example.unsplashphotos.R
 import java.io.File
@@ -16,9 +15,8 @@ import java.lang.Exception
 class ShareUtils() {
 
     companion object {
-        //To share image from the imageView
-        fun shareImage(context: Context, photoId: String, imageView: ImageView) {
-            val savedInFile = saveToCache(context,photoId,imageView)
+        fun shareImage(context: Context, photoId: String, imageViewBitmapDrawable: BitmapDrawable) {
+            val savedInFile = saveToCache(context,photoId,imageViewBitmapDrawable)
             if (savedInFile != null) {
                 val share = Intent(Intent.ACTION_SEND)
                 share.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -30,10 +28,9 @@ class ShareUtils() {
             }
         }
 
-        private fun saveToCache(context: Context, photoId: String, imageView: ImageView): File? {
+        private fun saveToCache(context: Context, photoId: String, imageViewBitmapDrawable: BitmapDrawable): File? {
             var saveStatus = false
-            val bitmapDrawable: BitmapDrawable = imageView.drawable as BitmapDrawable
-            val bitmap = bitmapDrawable.bitmap
+            val bitmap = imageViewBitmapDrawable.bitmap
             val directory = context.cacheDir
             val fileName = "$photoId.jpeg"
             val outputFile = File(directory, fileName)

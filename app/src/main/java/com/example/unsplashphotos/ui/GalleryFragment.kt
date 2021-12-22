@@ -10,6 +10,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.unsplashphotos.data.model.Photo
@@ -21,7 +22,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
-
     private lateinit var photoAdapter: PhotoAdapter
     private lateinit var binding: FragmentGalleryBinding
     private val photoViewModel by viewModels<PhotoViewModel>()
@@ -42,9 +42,7 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter { selectedPhoto: Photo, extra ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
-                selectedPhoto.id
-            )
+            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(selectedPhoto.id)
             findNavController().navigate(action)
         }
 
@@ -52,8 +50,7 @@ class GalleryFragment : Fragment() {
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
         photoViewModel
-        binding.photosRecyclerView.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.photosRecyclerView.layoutManager = GridLayoutManager(requireContext(),2,LinearLayoutManager.VERTICAL,false)
         displayPhotos()
     }
 
