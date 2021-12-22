@@ -14,7 +14,7 @@ import javax.inject.Inject
 class PhotoFullViewModel @Inject constructor(private val photoFullScreenUseCase: PhotoFullScreenUseCase) :
     ViewModel() {
 
-    private val mutableStateFlow = MutableStateFlow<Resource<Photo>?>(null)
+    private val mutableStateFlow = MutableStateFlow<Resource<Photo>?>(Resource.loading(null))
     val stateFlow = mutableStateFlow.asStateFlow()
 
     suspend fun getPhotoById(id: String) {
