@@ -11,5 +11,8 @@ data class Photo(
     @SerializedName("urls")
     val urls: Urls,
     @SerializedName("links")
-    val links: Links
+    val links: Links,
+    @SerializedName("likes")
+    val likes: Int
+
 )

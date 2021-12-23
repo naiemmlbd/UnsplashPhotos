@@ -1,5 +1,6 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -9,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -17,6 +20,7 @@ import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
@@ -30,19 +34,49 @@ class PhotoFullScreenFragment : Fragment() {
     private val photoFullViewModel by viewModels<PhotoFullViewModel>()
     private lateinit var downloadLink: String
     private lateinit var shareHtmlLink: String
+    private var likes = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPhotoFullScreenBinding.inflate(inflater)
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_photo_full_screen, container, false
+        );
+        binding.photoFullViewModel = photoFullViewModel
+        binding.lifecycleOwner = this
         binding.saveFab.setOnClickListener {
             activityResultLauncher.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
         binding.shareFab.setOnClickListener {
             share()
         }
+        binding.infoFab.setOnClickListener {
+            showInfo()
+        }
+        toggleActionBarVisibility()
         return binding.root
+    }
+
+    private fun toggleActionBarVisibility() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                photoFullViewModel.fabStateFlow.collectLatest {
+                    if (it) {
+                        (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
+
+                    } else {
+                        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
+
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("ResourceType")
+    private fun showInfo() {
+        Snackbar.make(binding.root, "Likes: $likes", Snackbar.LENGTH_LONG).show()
     }
 
     private fun share() {
@@ -85,6 +119,7 @@ class PhotoFullScreenFragment : Fragment() {
                         binding.photoFullScreen = it
                         downloadLink = it.links.download
                         shareHtmlLink = it.links.html
+                        likes = it.likes
                         binding.progressBar.visibility = View.GONE
                     } else {
                         binding.progressBar.visibility = View.GONE
@@ -95,5 +130,10 @@ class PhotoFullScreenFragment : Fragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as AppCompatActivity?)!!.supportActionBar!!.show()
     }
 }
