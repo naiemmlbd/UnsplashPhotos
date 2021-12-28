@@ -55,7 +55,8 @@ class DownloaderUtils(private val context: Context) {
                         finishDownload = true
                         Toast.makeText(
                             context,
-                            context.getString(R.string.downloadSuccess)+directory, Toast.LENGTH_SHORT
+                            context.getString(R.string.downloadSuccess) + directory,
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     else -> {

@@ -17,13 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(
     private val photoFullScreenUseCase: PhotoFullScreenUseCase, private val state: SavedStateHandle
-) : ViewModel(),Observable {
+) : ViewModel(), Observable {
 
     @Inject
     lateinit var downloaderUtils: DownloaderUtils
     val photoId = state.get<String>("photoId")
     private val mutableStateFlow = MutableStateFlow<Photo?>(null)
     val stateFlow = mutableStateFlow.asStateFlow()
+
     @Bindable
     val fabToggle = MutableLiveData<Boolean>()
     private val fabMutableStateFlow = MutableStateFlow<Boolean>(false)
@@ -40,11 +41,11 @@ class PhotoFullViewModel @Inject constructor(
             downloaderUtils.downloadPhoto(url, photoId)
     }
 
-    fun onImageClicked(){
-        if (fabToggle.value == true){
+    fun onImageClicked() {
+        if (fabToggle.value == true) {
             fabToggle.value = false
             fabMutableStateFlow.value = false
-        }else{
+        } else {
             fabToggle.value = true
             fabMutableStateFlow.value = true
 

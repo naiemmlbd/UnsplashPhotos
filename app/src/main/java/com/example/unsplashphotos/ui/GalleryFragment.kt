@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -43,7 +42,9 @@ class GalleryFragment : Fragment() {
 
     private fun setupPhotoRecyclerView() {
         photoAdapter = PhotoAdapter { selectedPhoto: Photo, extra ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(selectedPhoto.id)
+            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
+                selectedPhoto.id
+            )
             findNavController().navigate(action)
         }
 
@@ -51,7 +52,8 @@ class GalleryFragment : Fragment() {
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
         photoViewModel
-        binding.photosRecyclerView.layoutManager = GridLayoutManager(requireContext(),2,LinearLayoutManager.VERTICAL,false)
+        binding.photosRecyclerView.layoutManager =
+            GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
         displayPhotos()
     }
 

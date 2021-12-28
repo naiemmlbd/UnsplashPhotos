@@ -48,6 +48,7 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
             override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
                 return oldItem.id == newItem.id
             }
+
             override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
                 return oldItem.id == newItem.id
             }
