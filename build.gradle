@@ -4,9 +4,21 @@ buildscript {
         google()
         mavenCentral()
     }
+
+    ext.versions = [
+            'navigation': '2.3.5',
+            'lifecycle_version' : '2.4.0',
+            'retrofit_version' : '2.9.0',
+            'glide' : '4.12.0',
+            'hilt' : '2.38.1',
+            'paging' : '3.1.0',
+            'timber' : '4.7.1'
+    ]
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.0"
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.31"
+        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.3'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}"
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

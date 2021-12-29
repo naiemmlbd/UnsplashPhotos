@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">UnsplashPhotos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_data">No Data Available</string>
+    <string name="download">Download</string>
+    <string name="downlaoding">File is downloading...</string>
+    <string name="share">Share</string>
+    <string name="sharevia">Share via</string>
+    <string name="storageperm">Storage Permission Denied</string>
+    <string name="downloading">Downloading...</string>
+    <string name="downloadSuccess">Image downloaded successfully in </string>
+    <string name="downloadNothing">There\'s nothing to download</string>
 </resources>
