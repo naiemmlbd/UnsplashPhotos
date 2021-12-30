@@ -1,26 +1,29 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
 
+import android.content.Context
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.example.unsplashphotos.data.model.Photo
-import com.example.unsplashphotos.data.repository.DownloaderUtils
-import com.example.unsplashphotos.domain.usecase.PhotoFullScreenUseCase
+import com.example.unsplashphotos.data.repository.DownloaderUtils.downloadPhoto
+import com.example.unsplashphotos.domain.usecase.GetPhotoFullScreenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(
-    private val photoFullScreenUseCase: PhotoFullScreenUseCase, private val state: SavedStateHandle
+    @ApplicationContext private val context: Context,
+    private val getPhotoFullScreenUseCase: GetPhotoFullScreenUseCase,
+    state: SavedStateHandle
 ) : ViewModel(), Observable {
 
-    @Inject
-    lateinit var downloaderUtils: DownloaderUtils
+
     val photoId = state.get<String>("photoId")
     private val mutableStateFlow = MutableStateFlow<Photo?>(null)
     val stateFlow = mutableStateFlow.asStateFlow()
@@ -33,12 +36,12 @@ class PhotoFullViewModel @Inject constructor(
 
     suspend fun getPhotoById() {
         if (photoId != null)
-            mutableStateFlow.value = photoFullScreenUseCase.execute(photoId)
+            mutableStateFlow.value = getPhotoFullScreenUseCase.execute(photoId)
     }
 
     fun onClickDownloadFab(url: String) {
         if (photoId != null)
-            downloaderUtils.downloadPhoto(url, photoId)
+            downloadPhoto(context,url, photoId)
     }
 
     fun onImageClicked() {

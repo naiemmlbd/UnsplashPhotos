@@ -46,11 +46,11 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
         @JvmStatic
         val DIFF_ITEM_CALLBACK = object : DiffUtil.ItemCallback<Photo>() {
             override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
 
             override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
         }
     }

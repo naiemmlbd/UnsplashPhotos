@@ -19,7 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
-import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
+import com.example.unsplashphotos.ui.ShareUtils.shareImage
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

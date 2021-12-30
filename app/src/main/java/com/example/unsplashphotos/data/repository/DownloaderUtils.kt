@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
 import com.example.unsplashphotos.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
+import javax.inject.Inject
 
-class DownloaderUtils(private val context: Context) {
+object DownloaderUtils {
 
     @SuppressLint("Range")
-    fun downloadPhoto(url: String, photoId: String) {
+    fun downloadPhoto(context: Context,url: String, photoId: String) {
 
         val directory = File(Environment.DIRECTORY_PICTURES)
 

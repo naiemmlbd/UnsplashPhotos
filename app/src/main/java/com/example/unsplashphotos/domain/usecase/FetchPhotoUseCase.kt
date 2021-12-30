@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-class PhotoUseCase @Inject constructor(private val photoPagingSource: PagingSource<Int, Photo>) {
+class FetchPhotoUseCase @Inject constructor(private val photoPagingSource: PagingSource<Int, Photo>) {
 
     private val config = PagingConfig(pageSize = 20, enablePlaceholders = false)
 

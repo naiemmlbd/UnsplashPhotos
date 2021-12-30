@@ -5,13 +5,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.unsplashphotos.data.model.Photo
-import com.example.unsplashphotos.domain.usecase.PhotoUseCase
+import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class PhotoViewModel @Inject constructor(photoUseCase: PhotoUseCase) : ViewModel() {
+class PhotoViewModel @Inject constructor(fetchPhotoUseCase: FetchPhotoUseCase) : ViewModel() {
 
-    val photos: Flow<PagingData<Photo>> = photoUseCase.fetchPhotos().cachedIn(viewModelScope)
+    val photos: Flow<PagingData<Photo>> = fetchPhotoUseCase.fetchPhotos().cachedIn(viewModelScope)
 }
