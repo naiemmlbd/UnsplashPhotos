@@ -1,7 +1,7 @@
 package com.example.unsplashphotos.di
 
 import androidx.paging.PagingSource
-import com.example.unsplashphotos.data.model.Photo
+import com.example.unsplashphotos.data.model.local.Photo
 import com.example.unsplashphotos.data.repository.PhotoPagingSource
 import dagger.Binds
 import dagger.Module

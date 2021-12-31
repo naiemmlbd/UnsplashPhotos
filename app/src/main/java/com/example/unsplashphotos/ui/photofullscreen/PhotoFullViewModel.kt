@@ -7,7 +7,7 @@ import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.unsplashphotos.data.model.Photo
+import com.example.unsplashphotos.data.model.PhotoRemoteEntity
 import com.example.unsplashphotos.data.repository.DownloaderUtils.downloadPhoto
 import com.example.unsplashphotos.domain.usecase.GetPhotoFullScreenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +25,7 @@ class PhotoFullViewModel @Inject constructor(
 
 
     val photoId = state.get<String>("photoId")
-    private val mutableStateFlow = MutableStateFlow<Photo?>(null)
+    private val mutableStateFlow = MutableStateFlow<PhotoRemoteEntity?>(null)
     val stateFlow = mutableStateFlow.asStateFlow()
 
     @Bindable

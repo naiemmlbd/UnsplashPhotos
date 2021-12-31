@@ -13,11 +13,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.unsplashphotos.data.model.Photo
+import com.example.unsplashphotos.data.model.local.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -51,7 +52,7 @@ class GalleryFragment : Fragment() {
         photoAdapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
-        photoViewModel
+//        photoViewModel
         binding.photosRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
         displayPhotos()
