@@ -20,7 +20,6 @@ class PhotoDataSourceImpl @Inject constructor(
 
     override suspend fun getPhotoById(photoId: String): Response<Photo> {
         val photo = photoRemoteDataSource.getPhotoById(photoId, CLIENT_ID)
-        if (photo.isSuccessful)
         Timber.d("CheckPhoto: %s", photo)
         return photo
     }
