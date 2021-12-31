@@ -43,7 +43,7 @@ class PhotoFullScreenFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_photo_full_screen, container, false
-        );
+        )
         binding.photoFullViewModel = photoFullViewModel
         binding.lifecycleOwner = this
         binding.saveFab.setOnClickListener {
@@ -118,9 +118,9 @@ class PhotoFullScreenFragment : Fragment() {
                 photoFullViewModel.stateFlow.collectLatest {
                     if (it != null) {
                         binding.photoFullScreen = it
-                        downloadLink = it.links.download
-                        shareHtmlLink = it.links.html
-                        likes = it.likes
+                        downloadLink = it.links?.download ?: ""
+                        shareHtmlLink = it.links?.html ?: ""
+                        likes = it.likes ?: 0
                         binding.progressBar.visibility = View.GONE
                     } else {
                         binding.progressBar.visibility = View.GONE

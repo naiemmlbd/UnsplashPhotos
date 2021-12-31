@@ -1,24 +1,20 @@
 package com.example.unsplashphotos.domain.usecase
 
 
-import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
-import com.example.unsplashphotos.data.model.local.Photo
-import kotlinx.coroutines.flow.Flow
+import com.example.unsplashphotos.domain.repository.PhotoRepo
 import javax.inject.Inject
 
 
-class FetchPhotoUseCase @Inject constructor(private val photoPagingSource: PagingSource<Int, Photo>) {
+class FetchPhotoUseCase @Inject constructor(val photoRepo: PhotoRepo) {
 
     private val config = PagingConfig(pageSize = 10, enablePlaceholders = false)
 
-    fun fetchPhotos(): Flow<PagingData<Photo>> {
-        return Pager(
-            config
-        ) {
-            photoPagingSource
-        }.flow
-    }
+//    fun fetchPhotos(): Flow<PagingData<Photo>> {
+//        return Pager(
+//            config
+//        ) {
+//            PhotoPagingSource(photoRepo)
+//        }.flow
+//    }
 }

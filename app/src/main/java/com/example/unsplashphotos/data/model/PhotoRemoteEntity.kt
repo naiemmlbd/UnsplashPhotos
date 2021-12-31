@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 data class PhotoRemoteEntity(
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("alt_description")
-    val altDescription: String,
+    val altDescription: String?,
     @SerializedName("urls")
-    val urls: Urls,
+    val urls: Urls?,
     @SerializedName("links")
-    val links: Links,
+    val links: Links?,
     @SerializedName("likes")
-    val likes: Int
+    val likes: Int?
 )

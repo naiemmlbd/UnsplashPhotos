@@ -1,6 +1,6 @@
 package com.example.unsplashphotos.data.repository
 
-import com.example.unsplashphotos.data.model.EntityMapper
+import com.example.unsplashphotos.data.model.EntityMapperImpl
 import com.example.unsplashphotos.data.model.PhotoRemoteEntity
 import com.example.unsplashphotos.data.model.local.Photo
 import com.example.unsplashphotos.domain.repository.PhotoRepo
@@ -9,11 +9,11 @@ import javax.inject.Inject
 
 class PhotoRepoImpl @Inject constructor(
     private val photoDataSource: PhotoDataSource,
-    private val entityMapper: EntityMapper
-    ) : PhotoRepo {
+    private val entityMapper: EntityMapperImpl
+) : PhotoRepo {
 
-    override suspend fun getPhotos(page: Int): List<Photo>? {
-        return getPhotosFromAPI(page)
+    override suspend fun getPhotos(page: Int, perPage: Int): List<Photo>? {
+        return getPhotosFromAPI(page, perPage)
     }
 
     override suspend fun getPhotoById(photoId: String): PhotoRemoteEntity? {
@@ -31,11 +31,11 @@ class PhotoRepoImpl @Inject constructor(
         return photoRemoteEntityStore
     }
 
-    private suspend fun getPhotosFromAPI(page: Int): List<Photo> {
+    private suspend fun getPhotosFromAPI(page: Int, perPage: Int): List<Photo> {
         var photoList = listOf<Photo>()
         try {
-            val response = photoDataSource.getPhotos(page)
-            if (response.isSuccessful){
+            val response = photoDataSource.getPhotos(page, perPage)
+            if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
                     photoList = entityMapper.mapFromEntityList(body)
@@ -45,7 +45,7 @@ class PhotoRepoImpl @Inject constructor(
         } catch (exception: Exception) {
             Timber.e(exception.message.toString())
         }
-        Timber.tag("===>").d("CheckPoint: %s", photoList);
+        Timber.tag("===>").d("CheckPoint: %s", photoList)
         return photoList
     }
 }

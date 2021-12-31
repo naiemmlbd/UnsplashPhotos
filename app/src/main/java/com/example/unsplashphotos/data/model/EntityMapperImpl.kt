@@ -4,18 +4,15 @@ import com.example.unsplashphotos.data.model.local.Photo
 import com.example.unsplashphotos.utils.EntityMapper
 import javax.inject.Inject
 
-class EntityMapper
-@Inject
-constructor():
-    EntityMapper<PhotoRemoteEntity, Photo> {
+class EntityMapperImpl @Inject constructor() : EntityMapper<PhotoRemoteEntity, Photo> {
 
     override fun mapFromEntity(entity: PhotoRemoteEntity): Photo {
         return Photo(
-            id = entity.id,
-            altDescription = entity.altDescription,
-            urls = entity.urls,
-            links = entity.links,
-            likes = entity.likes
+            id = entity.id ?: "",
+            altDescription = entity.altDescription ?: "",
+            urls = entity.urls ?: Urls(),
+            links = entity.links ?: Links(),
+            likes = entity.likes ?: 0
         )
     }
 
@@ -29,7 +26,7 @@ constructor():
         )
     }
 
-    fun mapFromEntityList(entities: List<PhotoRemoteEntity>): List<Photo>{
+    fun mapFromEntityList(entities: List<PhotoRemoteEntity>): List<Photo> {
         return entities.map { mapFromEntity(it) }
     }
 

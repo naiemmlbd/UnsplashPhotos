@@ -12,8 +12,8 @@ class PhotoDataSourceImpl @Inject constructor(
     private val photoRemoteDataSource: PhotoRemoteDataSource
 ) : PhotoDataSource {
 
-    override suspend fun getPhotos(page: Int): Response<List<PhotoRemoteEntity>> {
-        val store = photoRemoteDataSource.getPhotos(CLIENT_ID, page)
+    override suspend fun getPhotos(page: Int, perPage: Int): Response<List<PhotoRemoteEntity>> {
+        val store = photoRemoteDataSource.getPhotos(CLIENT_ID, page, perPage)
         Timber.tag("===>").d("photos: %s", store)
         return store
     }
