@@ -2,26 +2,22 @@ package com.example.unsplashphotos.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.unsplashphotos.BuildConfig
-import com.example.unsplashphotos.data.api.PhotoRemoteDataSource
-import com.example.unsplashphotos.data.model.EntityMapperImpl
 import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
+import javax.inject.Inject
 
-class PhotoPagingSource(
-    private val photoRemote: PhotoRemoteDataSource,
-    private val mapper: EntityMapperImpl
+class PhotoPagingSource @Inject constructor(
+    private val fetchPhotoUseCase: FetchPhotoUseCase,
 ) : PagingSource<Int, Photo>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         val page = params.key ?: STARTING_PAGE
         val perPage = params.loadSize
-        val photoResult = photoRemote.getPhotos(BuildConfig.CLIENT_ID, page, perPage)
-        if (photoResult.isSuccessful) {
-            val list = photoResult.body()
-            val data = list?.map { mapper.mapFromEntity(it) }.orEmpty()
-            val nextPage = if (data.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
+        val photoResult = fetchPhotoUseCase.fetchPhotos(page, perPage)
+        if (photoResult != null) {
+            val nextPage = if (photoResult.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
             return LoadResult.Page(
-                data = data,
+                data = photoResult,
                 prevKey = if (page == STARTING_PAGE) null else page - 1,
                 nextKey = nextPage
             )
