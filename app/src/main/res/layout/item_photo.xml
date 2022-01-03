@@ -32,6 +32,6 @@
     <data>
         <variable
             name="photo"
-            type="com.example.unsplashphotos.data.model.local.Photo" />
+            type="com.example.unsplashphotos.data.model.domain.Photo" />
     </data>
 </layout>

@@ -2,7 +2,7 @@ package com.example.unsplashphotos.data.repository
 
 import com.example.unsplashphotos.data.model.EntityMapperImpl
 import com.example.unsplashphotos.data.model.PhotoRemoteEntity
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.domain.repository.PhotoRepo
 import com.example.unsplashphotos.utils.DataState
 import timber.log.Timber

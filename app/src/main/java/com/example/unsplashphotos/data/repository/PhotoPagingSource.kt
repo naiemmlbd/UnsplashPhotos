@@ -2,7 +2,7 @@ package com.example.unsplashphotos.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
 import javax.inject.Inject
 

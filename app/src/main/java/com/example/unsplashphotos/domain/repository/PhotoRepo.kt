@@ -1,7 +1,7 @@
 package com.example.unsplashphotos.domain.repository
 
 import com.example.unsplashphotos.data.model.PhotoRemoteEntity
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.utils.DataState
 
 

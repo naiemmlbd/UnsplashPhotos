@@ -1,7 +1,7 @@
 package com.example.unsplashphotos.domain.usecase
 
 
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.utils.DataState
 
 

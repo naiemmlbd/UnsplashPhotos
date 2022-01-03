@@ -11,7 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,11 +45,7 @@ class GalleryFragment : Fragment() {
             )
             findNavController().navigate(action)
         }
-
-//        photoAdapter.stateRestorationPolicy =
-//            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
-//        photoViewModel
         binding.photosRecyclerView.layoutManager =
             GridLayoutManager(requireContext(), 2)
         displayPhotos()

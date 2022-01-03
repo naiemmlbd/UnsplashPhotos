@@ -1,4 +1,4 @@
-package com.example.unsplashphotos.data.model.local
+package com.example.unsplashphotos.data.model.domain
 
 import com.example.unsplashphotos.data.model.Links
 import com.example.unsplashphotos.data.model.Urls

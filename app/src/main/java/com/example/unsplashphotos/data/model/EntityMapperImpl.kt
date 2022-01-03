@@ -1,6 +1,6 @@
 package com.example.unsplashphotos.data.model
 
-import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.utils.EntityMapper
 import javax.inject.Inject
 
