@@ -2,8 +2,9 @@ package com.example.unsplashphotos.domain.usecase
 
 
 import com.example.unsplashphotos.data.model.local.Photo
+import com.example.unsplashphotos.utils.DataState
 
 
 interface FetchPhotoUseCase {
-    suspend fun fetchPhotos(page: Int, perPage: Int): List<Photo>?
+    suspend fun fetchPhotos(page: Int, perPage: Int): DataState<List<Photo>>
 }

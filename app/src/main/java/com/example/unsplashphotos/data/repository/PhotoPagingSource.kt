@@ -14,10 +14,10 @@ class PhotoPagingSource @Inject constructor(
         val page = params.key ?: STARTING_PAGE
         val perPage = params.loadSize
         val photoResult = fetchPhotoUseCase.fetchPhotos(page, perPage)
-        if (photoResult != null) {
-            val nextPage = if (photoResult.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
+        if (photoResult.isSuccess() && photoResult.data != null) {
+            val nextPage = if (photoResult.data.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
             return LoadResult.Page(
-                data = photoResult,
+                data = photoResult.data,
                 prevKey = if (page == STARTING_PAGE) null else page - 1,
                 nextKey = nextPage
             )
