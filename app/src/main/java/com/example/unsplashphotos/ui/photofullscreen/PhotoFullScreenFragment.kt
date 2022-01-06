@@ -65,10 +65,8 @@ class PhotoFullScreenFragment : Fragment() {
                 photoFullViewModel.fabStateFlow.collectLatest {
                     if (it) {
                         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-
                     } else {
                         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-
                     }
                 }
             }
@@ -116,18 +114,23 @@ class PhotoFullScreenFragment : Fragment() {
             photoFullViewModel.getPhotoById()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoFullViewModel.stateFlow.collectLatest {
-                    if (it != null) {
-                        binding.photoFullScreen = it
-                        downloadLink = it.links?.download ?: ""
-                        shareHtmlLink = it.links?.html ?: ""
-                        likes = it.likes ?: 0
-                        binding.progressBar.visibility = View.GONE
-                    } else {
-                        binding.progressBar.visibility = View.GONE
-                        binding.textTitle.text = getString(R.string.no_data)
-                        Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
-                            .show()
+                    when (it.error) {
+                        PhotoFullViewModel.UiState.Error.NetworkError -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.textTitle.text = getString(R.string.no_data)
+                            Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
+                                .show()
+                        }
+                        null -> {}
                     }
+                    if (it.isLoading) {
+                        binding.progressBar.visibility = View.VISIBLE
+                    }
+                    binding.photoFullScreen = it.photo
+                    downloadLink = it.photo.links.download.toString()
+                    shareHtmlLink = it.photo.links.html.toString()
+                    likes = it.photo.likes
+                    binding.progressBar.visibility = View.GONE
                 }
             }
         }

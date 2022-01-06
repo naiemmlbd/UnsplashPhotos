@@ -6,8 +6,8 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.data.repository.PhotoPagingSource
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

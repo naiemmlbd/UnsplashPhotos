@@ -1,10 +1,10 @@
 package com.example.unsplashphotos.data.model
 
-import com.example.unsplashphotos.data.model.domain.Photo
-import com.example.unsplashphotos.utils.EntityMapper
+import com.example.unsplashphotos.domain.model.Photo
+import com.example.unsplashphotos.utils.PhotoRemoteToPhotoMapper
 import javax.inject.Inject
 
-class EntityMapperImpl @Inject constructor() : EntityMapper<PhotoRemoteEntity, Photo> {
+class PhotoRemoteToPhotoMapperImpl @Inject constructor() : PhotoRemoteToPhotoMapper<PhotoRemoteEntity, Photo> {
 
     override fun mapFromEntity(entity: PhotoRemoteEntity): Photo {
         return Photo(

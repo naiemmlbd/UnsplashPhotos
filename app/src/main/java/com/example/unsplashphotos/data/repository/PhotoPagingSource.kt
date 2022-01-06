@@ -2,8 +2,9 @@ package com.example.unsplashphotos.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.unsplashphotos.data.model.domain.Photo
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
+import com.example.unsplashphotos.utils.DataState
 import javax.inject.Inject
 
 class PhotoPagingSource @Inject constructor(
@@ -14,13 +15,16 @@ class PhotoPagingSource @Inject constructor(
         val page = params.key ?: STARTING_PAGE
         val perPage = params.loadSize
         val photoResult = fetchPhotoUseCase.fetchPhotos(page, perPage)
-        if (photoResult.isSuccess() && photoResult.data != null) {
-            val nextPage = if (photoResult.data.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
-            return LoadResult.Page(
-                data = photoResult.data,
-                prevKey = if (page == STARTING_PAGE) null else page - 1,
-                nextKey = nextPage
-            )
+        when (photoResult) {
+            is DataState.Success -> {
+                val nextPage =
+                    if (photoResult.data.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
+                return LoadResult.Page(
+                    data = photoResult.data,
+                    prevKey = if (page == STARTING_PAGE) null else page - 1,
+                    nextKey = nextPage
+                )
+            }
         }
         return LoadResult.Error(Exception("Error Occurred"))
     }

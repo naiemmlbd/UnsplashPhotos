@@ -1,6 +1,6 @@
 package com.example.unsplashphotos.utils
 
-interface EntityMapper <RemoteEntity, DomainModel>{
+interface PhotoRemoteToPhotoMapper <RemoteEntity, DomainModel>{
 
     fun mapFromEntity(entity: RemoteEntity): DomainModel
 

@@ -11,10 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.unsplashphotos.data.model.domain.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,7 @@ class GalleryFragment : Fragment() {
     private fun displayPhotos() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoViewModel.photos.collectLatest {
+                photoViewModel.photos.collect {
                     photoAdapter.submitData(it)
                 }
             }

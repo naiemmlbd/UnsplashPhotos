@@ -11,14 +11,12 @@ interface PhotoRemoteDataSource {
 
     @GET("/photos/")
     suspend fun getPhotos(
-        @Query("client_id") clientId: String,
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
     ): Response<List<PhotoRemoteEntity>>
 
     @GET("/photos/{id}")
     suspend fun getPhotoById(
-        @Path(value = "id") id: String,
-        @Query("client_id") clientId: String
+        @Path(value = "id") id: String
     ): Response<PhotoRemoteEntity>
 }
