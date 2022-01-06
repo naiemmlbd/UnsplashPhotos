@@ -16,7 +16,6 @@ import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint

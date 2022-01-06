@@ -11,7 +11,7 @@ data class PhotoRemoteEntity(
     @SerializedName("urls")
     val urls: Urls?,
     @SerializedName("links")
-    val links: Links?,
+    val linksRemote: LinksRemote?,
     @SerializedName("likes")
     val likes: Int?
 )

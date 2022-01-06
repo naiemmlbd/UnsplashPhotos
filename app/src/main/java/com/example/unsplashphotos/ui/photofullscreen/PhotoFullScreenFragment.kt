@@ -127,8 +127,8 @@ class PhotoFullScreenFragment : Fragment() {
                         binding.progressBar.visibility = View.VISIBLE
                     }
                     binding.photoFullScreen = it.photo
-                    downloadLink = it.photo.links.download.toString()
-                    shareHtmlLink = it.photo.links.html.toString()
+                    downloadLink = it.photo.links.download
+                    shareHtmlLink = it.photo.links.html
                     likes = it.photo.likes
                     binding.progressBar.visibility = View.GONE
                 }

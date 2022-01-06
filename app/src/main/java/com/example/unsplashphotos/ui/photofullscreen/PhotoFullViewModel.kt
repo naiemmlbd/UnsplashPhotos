@@ -7,7 +7,6 @@ import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.unsplashphotos.data.model.Links
 import com.example.unsplashphotos.data.model.Urls
 import com.example.unsplashphotos.data.repository.DownloaderUtils.downloadPhoto
 import com.example.unsplashphotos.domain.model.Photo
@@ -77,7 +76,7 @@ class PhotoFullViewModel @Inject constructor(
     data class UiState(
         val isLoading: Boolean = false,
         val error: Error? = null,
-        val photo: Photo = Photo("","", Urls(), Links(),0)
+        val photo: Photo = Photo("","", Urls(), Photo.Links.EMPTY,0)
     ) {
         sealed class Error {
             object NetworkError : Error()

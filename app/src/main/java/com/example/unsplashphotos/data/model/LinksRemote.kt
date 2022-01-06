@@ -3,7 +3,7 @@ package com.example.unsplashphotos.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Links(
+data class LinksRemote(
     @SerializedName("download")
     val download: String? = "",
     @SerializedName("download_location")
