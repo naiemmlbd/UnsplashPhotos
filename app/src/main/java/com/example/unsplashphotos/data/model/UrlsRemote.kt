@@ -3,7 +3,7 @@ package com.example.unsplashphotos.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Urls(
+data class UrlsRemote(
     @SerializedName("full")
     val full: String? = "",
     @SerializedName("raw")

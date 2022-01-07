@@ -47,7 +47,7 @@ class GalleryFragment : Fragment() {
         }
         binding.photosRecyclerView.adapter = photoAdapter
         binding.photosRecyclerView.layoutManager =
-            GridLayoutManager(requireContext(), 2)
+            GridLayoutManager(requireContext(), SPAN_COUNT)
         displayPhotos()
     }
 
@@ -59,5 +59,8 @@ class GalleryFragment : Fragment() {
                 }
             }
         }
+    }
+    companion object {
+        const val SPAN_COUNT = 2
     }
 }

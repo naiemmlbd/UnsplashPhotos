@@ -1,7 +1,5 @@
 package com.example.unsplashphotos.domain.model
 
-import com.example.unsplashphotos.data.model.Urls
-
 data class Photo(
     val id: String,
     val altDescription: String,
@@ -9,7 +7,7 @@ data class Photo(
     val links: Links,
     val likes: Int
 ) {
-    
+
     data class Links(
         val download: String,
         val downloadLocation: String,
@@ -18,6 +16,15 @@ data class Photo(
     ) {
         companion object {
             val EMPTY = Links("", "", "", "")
+        }
+    }
+
+    data class Urls(
+        val regular: String,
+        val thumb: String
+    ) {
+        companion object {
+            val EMPTY = Urls("", "")
         }
     }
 }

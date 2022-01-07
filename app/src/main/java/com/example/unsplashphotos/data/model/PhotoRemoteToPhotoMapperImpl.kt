@@ -11,9 +11,16 @@ class PhotoRemoteToPhotoMapperImpl @Inject constructor() :
         return Photo(
             id = entity.id ?: "",
             altDescription = entity.altDescription ?: "",
-            urls = entity.urls ?: Urls(),
+            urls = mapToDomainUrls(entity.urlsRemote),
             links = mapToDomainLinks(entity.linksRemote),
             likes = entity.likes ?: 0
+        )
+    }
+
+    private fun mapToDomainUrls(urlsRemote: UrlsRemote?): Photo.Urls {
+        return Photo.Urls(
+            urlsRemote?.regular ?: "",
+            urlsRemote?.thumb ?: ""
         )
     }
 
@@ -30,7 +37,7 @@ class PhotoRemoteToPhotoMapperImpl @Inject constructor() :
         return PhotoRemoteEntity(
             id = domainModel.id,
             altDescription = domainModel.altDescription,
-            urls = domainModel.urls,
+            urlsRemote = UrlsRemote(),
             linksRemote = LinksRemote(),
             likes = domainModel.likes
         )
