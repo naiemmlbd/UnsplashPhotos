@@ -25,7 +25,7 @@ class PhotoFullViewModel @Inject constructor(
 ) : ViewModel(), Observable {
 
     val photoId = state.get<String>("photoId")
-    private val mutableStateFlow = MutableStateFlow(UiState())
+    private val mutableStateFlow: MutableStateFlow<DataState<Photo>?> = MutableStateFlow(DataState.Loading())
     val stateFlow = mutableStateFlow.asStateFlow()
 
     @Bindable
@@ -35,18 +35,9 @@ class PhotoFullViewModel @Inject constructor(
 
 
     suspend fun getPhotoById() {
-        mutableStateFlow.value = UiState(isLoading = true)
-        if (photoId != null)
-            when (val result = fetchPhotoFullScreenUseCase.getPhoto(photoId)) {
-                is DataState.Error -> {
-                    mutableStateFlow.value = UiState(error = UiState.Error.NetworkError)
-                }
-                is DataState.Loading -> {
-                }
-                is DataState.Success -> {
-                    mutableStateFlow.value = UiState(photo = result.data)
-                }
-            }
+        if (photoId != null){
+            mutableStateFlow.value = fetchPhotoFullScreenUseCase.getPhoto(photoId)
+        }
     }
 
     fun onClickDownloadFab(url: String) {
@@ -70,15 +61,5 @@ class PhotoFullViewModel @Inject constructor(
 
     override fun removeOnPropertyChangedCallback(callback: Observable.OnPropertyChangedCallback?) {
 
-    }
-
-    data class UiState(
-        val isLoading: Boolean = false,
-        val error: Error? = null,
-        val photo: Photo = Photo("","", Photo.Urls.EMPTY, Photo.Links.EMPTY,0)
-    ) {
-        sealed class Error {
-            object NetworkError : Error()
-        }
     }
 }

@@ -20,6 +20,7 @@ import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import com.example.unsplashphotos.ui.ShareUtils.shareImage
+import com.example.unsplashphotos.utils.DataState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -114,23 +115,25 @@ class PhotoFullScreenFragment : Fragment() {
             photoFullViewModel.getPhotoById()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoFullViewModel.stateFlow.collectLatest {
-                    when (it.error) {
-                        PhotoFullViewModel.UiState.Error.NetworkError -> {
+                    when (it) {
+                        is DataState.Error -> {
                             binding.progressBar.visibility = View.GONE
                             binding.textTitle.text = getString(R.string.no_data)
                             Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
                                 .show()
                         }
+                        is DataState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        is DataState.Success -> {
+                            binding.photoFullScreen = it.data
+                            downloadLink = it.data.links.download
+                            shareHtmlLink = it.data.links.html
+                            likes = it.data.likes
+                            binding.progressBar.visibility = View.GONE
+                        }
                         null -> {}
                     }
-                    if (it.isLoading) {
-                        binding.progressBar.visibility = View.VISIBLE
-                    }
-                    binding.photoFullScreen = it.photo
-                    downloadLink = it.photo.links.download
-                    shareHtmlLink = it.photo.links.html
-                    likes = it.photo.likes
-                    binding.progressBar.visibility = View.GONE
                 }
             }
         }
