@@ -1,42 +1,45 @@
 package com.example.unsplashphotos.data.repository
 
-import com.example.unsplashphotos.utils.Resource
-import com.example.unsplashphotos.data.model.Photo
+import com.example.unsplashphotos.data.model.PhotoRemoteToPhotoMapperImpl
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.domain.repository.PhotoRepo
+import com.example.unsplashphotos.utils.DataState
 import timber.log.Timber
 import javax.inject.Inject
 
 class PhotoRepoImpl @Inject constructor(
-    private val photoDataSource: PhotoDataSource
+    private val photoDataSource: PhotoDataSource,
+    private val photoRemoteToPhotoMapper: PhotoRemoteToPhotoMapperImpl
 ) : PhotoRepo {
-    override suspend fun getPhotos(page: Int): List<Photo>? {
-        return getPhotosFromAPI(page)
+
+    override suspend fun getPhotos(page: Int, perPage: Int): DataState<List<Photo>> {
+        return getPhotosFromAPI(page, perPage)
     }
 
-    override suspend fun getPhotoById(photoId: String): Resource<Photo> {
+    override suspend fun getPhotoById(photoId: String): DataState<Photo> {
         val response = photoDataSource.getPhotoById(photoId)
-        return if (response.isSuccessful) {
-            val body = response.body()
-            Resource.success(body)
+        val body = response.body()
+        Timber.tag("T===>").i("Photo: %s", body)
+        return if(body != null){
+            DataState.Success(photoRemoteToPhotoMapper.mapFromEntity(body))
         }else{
-            Resource.error(response.message())
+            DataState.Error(Exception(response.message()))
         }
     }
 
-    private suspend fun getPhotosFromAPI(page: Int): List<Photo> {
+    private suspend fun getPhotosFromAPI(page: Int, perPage: Int): DataState<List<Photo>> {
         var photoList = listOf<Photo>()
 
-        try {
-            val response = photoDataSource.getPhotos(page)
-            val body = response.body()
-            Timber.tag("===>").d("CheckPoint 1%s", body);
-            if (body != null) {
-                photoList = body
-            }
-        } catch (exception: Exception) {
-            Timber.e(exception.message.toString())
+        val response = photoDataSource.getPhotos(page, perPage)
+        if (!response.isSuccessful) {
+            return DataState.Error(Exception(response.message() ?: "Unknown error"))
         }
-        Timber.tag("===>").d("CheckPoint 2%s", photoList);
-        return photoList
+        val body = response.body()
+        if (body != null) {
+            photoList = body.map { photoRemoteToPhotoMapper.mapFromEntity(it) }
+        }
+
+        Timber.tag("===>").d("CheckPoint: %s", photoList)
+        return DataState.Success(photoList)
     }
 }

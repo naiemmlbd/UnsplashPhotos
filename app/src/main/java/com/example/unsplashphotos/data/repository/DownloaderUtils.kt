@@ -10,10 +10,10 @@ import android.widget.Toast
 import com.example.unsplashphotos.R
 import java.io.File
 
-class DownloaderUtils(private val context: Context) {
+object DownloaderUtils {
 
     @SuppressLint("Range")
-    fun downloadPhoto(url: String, photoId: String) {
+    fun downloadPhoto(context: Context,url: String, photoId: String) {
 
         val directory = File(Environment.DIRECTORY_PICTURES)
 
@@ -55,7 +55,8 @@ class DownloaderUtils(private val context: Context) {
                         finishDownload = true
                         Toast.makeText(
                             context,
-                            context.getString(R.string.downloadSuccess)+directory, Toast.LENGTH_SHORT
+                            context.getString(R.string.downloadSuccess) + directory,
+                            Toast.LENGTH_SHORT
                         ).show()
                     }
                     else -> {

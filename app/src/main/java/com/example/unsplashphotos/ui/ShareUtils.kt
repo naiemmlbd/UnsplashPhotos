@@ -9,26 +9,35 @@ import androidx.core.content.FileProvider.getUriForFile
 import com.example.unsplashphotos.R
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.Exception
 
 
-class ShareUtils() {
+object ShareUtils {
 
-    companion object {
+        //To share image from the imageView
         fun shareImage(context: Context, photoId: String, imageViewBitmapDrawable: BitmapDrawable) {
-            val savedInFile = saveToCache(context,photoId,imageViewBitmapDrawable)
+            val savedInFile = saveToCache(context, photoId, imageViewBitmapDrawable)
             if (savedInFile != null) {
                 val share = Intent(Intent.ACTION_SEND)
                 share.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
                 share.type = "image/*"
                 val uri: Uri = getUriForFile(
-                    context, context.applicationContext.packageName + ".provider", savedInFile)
+                    context, context.applicationContext.packageName + ".provider", savedInFile
+                )
                 share.putExtra(Intent.EXTRA_STREAM, uri)
-                context.startActivity(Intent.createChooser(share, context.getString(R.string.sharevia)))
+                context.startActivity(
+                    Intent.createChooser(
+                        share,
+                        context.getString(R.string.sharevia)
+                    )
+                )
             }
         }
 
-        private fun saveToCache(context: Context, photoId: String, imageViewBitmapDrawable: BitmapDrawable): File? {
+        private fun saveToCache(
+            context: Context,
+            photoId: String,
+            imageViewBitmapDrawable: BitmapDrawable
+        ): File? {
             var saveStatus = false
             val bitmap = imageViewBitmapDrawable.bitmap
             val directory = context.cacheDir
@@ -43,7 +52,7 @@ class ShareUtils() {
             } catch (exception: Exception) {
                 exception.printStackTrace()
             }
-            return if (saveStatus) outputFile else  null
+            return if (saveStatus) outputFile else null
         }
-    }
+
 }
