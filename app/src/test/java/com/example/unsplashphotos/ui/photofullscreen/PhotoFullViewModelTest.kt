@@ -5,6 +5,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.platform.app.InstrumentationRegistry
 import com.example.unsplashphotos.TestCoroutineRule
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.getPhotoList
 import com.example.unsplashphotos.utils.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -16,10 +17,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.robolectric.RobolectricTestRunner
 
 @ExperimentalCoroutinesApi
-@RunWith(RobolectricTestRunner::class)
+@RunWith(MockitoJUnitRunner::class)
 class PhotoFullViewModelTest(
 ){
 
@@ -33,11 +36,11 @@ class PhotoFullViewModelTest(
     private lateinit var photoFullUseCase: FakePhotoFullUseCase
     private lateinit var photoFullViewModel: PhotoFullViewModel
     private lateinit var state: SavedStateHandle
+    @Mock
     private lateinit var context: Context
 
     @Before
     fun setUp() {
-        context = InstrumentationRegistry.getInstrumentation().targetContext
         photoFullUseCase = FakePhotoFullUseCase(getPhotoList())
         state = SavedStateHandle()
         state.set("photoId","aa")
@@ -52,11 +55,11 @@ class PhotoFullViewModelTest(
         assertThat((photoFullData as DataState.Success).data.id, equalTo("aa"))
     }
 
-//    @Test
-//    fun getPhotoFull_error() = testCoroutineRule.runBlockingTest{
-//        photoFullUseCase.setReturnError(true)
-//        photoFullViewModel.getPhotoById("aa")
-//        var photoFullData = photoFullViewModel.flow.first()
-//        assertThat(photoFullData.status,equalTo(Status.ERROR))
-//    }
+    @Test
+    fun getPhotoFull_error() = testCoroutineRule.runBlockingTest{
+        photoFullUseCase.setReturnError(true)
+        photoFullViewModel.getPhotoById()
+        val photoFullData = photoFullViewModel.stateFlow.first()
+        assertThat((photoFullData is DataState.Error), equalTo(true))
+    }
 }
