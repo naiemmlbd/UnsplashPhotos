@@ -9,8 +9,8 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.unsplashphotos.R
-import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.databinding.ItemPhotoBinding
+import com.example.unsplashphotos.domain.model.Photo
 
 class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras) -> Unit) :
     PagingDataAdapter<Photo, PhotoAdapter.PhotoViewHolder>(DIFF_ITEM_CALLBACK) {
@@ -50,7 +50,7 @@ class PhotoAdapter(private val onClickListener: (Photo, FragmentNavigator.Extras
             }
 
             override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem == newItem
             }
         }
     }

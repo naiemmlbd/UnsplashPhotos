@@ -11,9 +11,8 @@ import java.io.File
 import java.io.FileOutputStream
 
 
-class ShareUtils() {
+object ShareUtils {
 
-    companion object {
         //To share image from the imageView
         fun shareImage(context: Context, photoId: String, imageViewBitmapDrawable: BitmapDrawable) {
             val savedInFile = saveToCache(context, photoId, imageViewBitmapDrawable)
@@ -55,5 +54,5 @@ class ShareUtils() {
             }
             return if (saveStatus) outputFile else null
         }
-    }
+
 }

@@ -19,7 +19,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
-import com.example.unsplashphotos.ui.ShareUtils.Companion.shareImage
+import com.example.unsplashphotos.ui.ShareUtils.shareImage
+import com.example.unsplashphotos.utils.DataState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,7 @@ class PhotoFullScreenFragment : Fragment() {
     ): View {
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_photo_full_screen, container, false
-        );
+        )
         binding.photoFullViewModel = photoFullViewModel
         binding.lifecycleOwner = this
         binding.saveFab.setOnClickListener {
@@ -65,10 +66,8 @@ class PhotoFullScreenFragment : Fragment() {
                 photoFullViewModel.fabStateFlow.collectLatest {
                     if (it) {
                         (activity as AppCompatActivity?)!!.supportActionBar!!.hide()
-
                     } else {
                         (activity as AppCompatActivity?)!!.supportActionBar!!.show()
-
                     }
                 }
             }
@@ -116,17 +115,24 @@ class PhotoFullScreenFragment : Fragment() {
             photoFullViewModel.getPhotoById()
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 photoFullViewModel.stateFlow.collectLatest {
-                    if (it != null) {
-                        binding.photoFullScreen = it
-                        downloadLink = it.links.download
-                        shareHtmlLink = it.links.html
-                        likes = it.likes
-                        binding.progressBar.visibility = View.GONE
-                    } else {
-                        binding.progressBar.visibility = View.GONE
-                        binding.textTitle.text = getString(R.string.no_data)
-                        Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
-                            .show()
+                    when (it) {
+                        is DataState.Error -> {
+                            binding.progressBar.visibility = View.GONE
+                            binding.textTitle.text = getString(R.string.no_data)
+                            Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
+                                .show()
+                        }
+                        is DataState.Loading -> {
+                            binding.progressBar.visibility = View.VISIBLE
+                        }
+                        is DataState.Success -> {
+                            binding.photoFullScreen = it.data
+                            downloadLink = it.data.links.download
+                            shareHtmlLink = it.data.links.html
+                            likes = it.data.likes
+                            binding.progressBar.visibility = View.GONE
+                        }
+                        null -> {}
                     }
                 }
             }

@@ -2,23 +2,29 @@ package com.example.unsplashphotos.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.unsplashphotos.data.model.Photo
-import com.example.unsplashphotos.domain.repository.PhotoRepo
+import com.example.unsplashphotos.domain.model.Photo
+import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
+import com.example.unsplashphotos.utils.DataState
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepo) : PagingSource<Int, Photo>() {
+class PhotoPagingSource @Inject constructor(
+    private val fetchPhotoUseCase: FetchPhotoUseCase,
+) : PagingSource<Int, Photo>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
-        val page = params.key ?: 1
-        val photoResult = photoRepo.getPhotos(page)
-        if (photoResult != null) {
-            return LoadResult.Page(
-                photoResult,
-                if (page == 1) null else page - 1,
-                page + 1
-            )
+        val page = params.key ?: STARTING_PAGE
+        val perPage = params.loadSize
+        val photoResult = fetchPhotoUseCase.fetchPhotos(page, perPage)
+        when (photoResult) {
+            is DataState.Success -> {
+                val nextPage =
+                    if (photoResult.data.isEmpty()) null else page + (params.loadSize / PAGE_SIZE)
+                return LoadResult.Page(
+                    data = photoResult.data,
+                    prevKey = if (page == STARTING_PAGE) null else page - 1,
+                    nextKey = nextPage
+                )
+            }
         }
         return LoadResult.Error(Exception("Error Occurred"))
     }
@@ -28,5 +34,10 @@ class PhotoPagingSource @Inject constructor(private val photoRepo: PhotoRepo) : 
             val anchorPage = state.closestPageToPosition(anchorPosition)
             anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
         }
+    }
+
+    companion object {
+        const val PAGE_SIZE = 10
+        const val STARTING_PAGE = 1
     }
 }

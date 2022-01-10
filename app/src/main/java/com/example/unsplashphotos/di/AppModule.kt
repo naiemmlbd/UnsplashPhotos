@@ -2,7 +2,6 @@ package com.example.unsplashphotos.di
 
 import android.content.Context
 import com.example.unsplashphotos.common.ImageLoader
-import com.example.unsplashphotos.data.repository.DownloaderUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,8 +20,5 @@ object AppModule {
     }
 
     @Provides
-    @Singleton
-    fun provideDownloader(@ApplicationContext context: Context): DownloaderUtils {
-        return DownloaderUtils(context)
-    }
+    fun provideContext(@ApplicationContext context: Context): Context = context
 }

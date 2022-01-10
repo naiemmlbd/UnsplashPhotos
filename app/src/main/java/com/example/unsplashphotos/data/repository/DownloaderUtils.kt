@@ -10,10 +10,11 @@ import android.widget.Toast
 import com.example.unsplashphotos.R
 import java.io.File
 
-class DownloaderUtils(private val context: Context) {
+
+object DownloaderUtils {
 
     @SuppressLint("Range")
-    fun downloadPhoto(url: String, photoId: String) {
+    fun downloadPhoto(context: Context,url: String, photoId: String) {
 
         val directory = File(Environment.DIRECTORY_PICTURES)
 

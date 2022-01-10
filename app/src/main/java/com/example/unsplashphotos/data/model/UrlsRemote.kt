@@ -3,15 +3,15 @@ package com.example.unsplashphotos.data.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Urls(
+data class UrlsRemote(
     @SerializedName("full")
-    val full: String,
+    val full: String? = "",
     @SerializedName("raw")
-    val raw: String,
+    val raw: String? = "",
     @SerializedName("regular")
-    val regular: String,
+    val regular: String? = "",
     @SerializedName("small")
-    val small: String,
+    val small: String? = "",
     @SerializedName("thumb")
-    val thumb: String
+    val thumb: String? = ""
 )
