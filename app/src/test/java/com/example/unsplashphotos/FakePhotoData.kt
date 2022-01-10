@@ -1,15 +1,11 @@
 package com.example.unsplashphotos
 
-import com.example.unsplashphotos.data.model.Links
-import com.example.unsplashphotos.data.model.Photo
-import com.example.unsplashphotos.data.model.Urls
+import com.example.unsplashphotos.domain.model.Photo
 
 
-fun getPhotoList(): MutableList<Photo>{
+fun getPhotoList(): MutableList<Photo> {
     return mutableListOf(
-        Photo("aa","photoAA", Urls("","","","",""), Links("","","","")),
-        Photo("bb","photoBB", Urls("","","","",""), Links("","","","")),
-        Photo("cc","photoCC", Urls("","","","",""), Links("","","","")),
-        Photo("dd","photoDD", Urls("","","","",""), Links("","","",""))
+        Photo("aa", "photoAA", Photo.Urls("", ""), Photo.Links("", "", "", ""), 10),
+        Photo("bb", "photoBB", Photo.Urls("", ""), Photo.Links("", "", "", ""), 20)
     )
 }

@@ -27,7 +27,6 @@ class PhotoFullViewModel @Inject constructor(
     val photoId = state.get<String>("photoId")
     private val mutableStateFlow: MutableStateFlow<DataState<Photo>?> = MutableStateFlow(DataState.Loading())
     val stateFlow = mutableStateFlow.asStateFlow()
-
     @Bindable
     val fabToggle = MutableLiveData<Boolean>()
     private val fabMutableStateFlow = MutableStateFlow<Boolean>(false)

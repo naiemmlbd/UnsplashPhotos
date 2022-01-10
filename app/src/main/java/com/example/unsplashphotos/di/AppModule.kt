@@ -18,4 +18,7 @@ object AppModule {
     fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
         return ImageLoader(context)
     }
+
+    @Provides
+    fun provideContext(@ApplicationContext context: Context): Context = context
 }

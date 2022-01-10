@@ -3,13 +3,13 @@ package com.example.unsplashphotos.ui
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.unsplashphotos.TestCoroutineRule
 import com.example.unsplashphotos.data.repository.PhotoDataSource
+import com.example.unsplashphotos.domain.usecase.FetchPhotoUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Rule
 import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import com.example.unsplashphotos.domain.usecase.PhotoUseCase
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -25,7 +25,7 @@ class PhotoViewModelTest{
     private lateinit var photoDataSource: PhotoDataSource
 
     @Mock
-    private lateinit var photoUseCase: PhotoUseCase
+    private lateinit var photoUseCase: FetchPhotoUseCase
 
 
 }
