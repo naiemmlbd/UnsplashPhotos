@@ -13,7 +13,7 @@ class PhotoRepoImpl @Inject constructor(
     private val photoCacheDataSource: PhotoCacheDataSource
 ) : PhotoRepo {
     override suspend fun getPhotos(page: Int, perPage: Int): DataState<List<Photo>> {
-        val fetchedList = getPhotosFromAPI(page, perPage)
+        val fetchedList = getPhotosFromCache(page, perPage)
 
         return if (fetchedList.isNotEmpty()) {
             DataState.Success(fetchedList)
@@ -29,7 +29,7 @@ class PhotoRepoImpl @Inject constructor(
         return if (body != null) {
             DataState.Success(photoRemoteToPhotoMapper.mapFromEntity(body))
         } else {
-            DataState.Error(Exception(response.message()))
+            return DataState.Error(Exception("Photo fetching failed"))
         }
     }
 
