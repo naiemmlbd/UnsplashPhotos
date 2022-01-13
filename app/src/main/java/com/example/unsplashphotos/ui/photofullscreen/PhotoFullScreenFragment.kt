@@ -17,7 +17,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
-import com.example.unsplashphotos.common.ImageLoader
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import com.example.unsplashphotos.ui.ShareUtils.shareImage
 import com.example.unsplashphotos.utils.DataState
@@ -26,12 +25,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class PhotoFullScreenFragment : Fragment() {
-    @Inject
-    lateinit var imageLoader: ImageLoader
+
     private lateinit var binding: FragmentPhotoFullScreenBinding
     private val photoFullViewModel by viewModels<PhotoFullViewModel>()
     private lateinit var downloadLink: String
