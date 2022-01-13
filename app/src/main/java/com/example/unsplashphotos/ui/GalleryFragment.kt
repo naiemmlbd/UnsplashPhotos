@@ -11,10 +11,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
+import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -47,13 +45,9 @@ class GalleryFragment : Fragment() {
             )
             findNavController().navigate(action)
         }
-
-        photoAdapter.stateRestorationPolicy =
-            RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.photosRecyclerView.adapter = photoAdapter
-        photoViewModel
         binding.photosRecyclerView.layoutManager =
-            GridLayoutManager(requireContext(), 2, LinearLayoutManager.VERTICAL, false)
+            GridLayoutManager(requireContext(), SPAN_COUNT)
         displayPhotos()
     }
 
@@ -65,5 +59,8 @@ class GalleryFragment : Fragment() {
                 }
             }
         }
+    }
+    companion object {
+        const val SPAN_COUNT = 2
     }
 }

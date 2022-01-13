@@ -96,7 +96,7 @@
     <data>
         <variable
             name="photoFullScreen"
-            type="com.example.unsplashphotos.data.model.Photo" />
+            type="com.example.unsplashphotos.domain.model.Photo" />
         <import type="android.view.View"/>
         <variable
             name="photoFullViewModel"

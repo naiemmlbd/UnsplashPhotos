@@ -8,9 +8,7 @@ import android.net.Uri
 import android.os.Environment
 import android.widget.Toast
 import com.example.unsplashphotos.R
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
-import javax.inject.Inject
 
 object DownloaderUtils {
 

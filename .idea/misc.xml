@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/Fahim/StudioProjects/UnsplashPhotos/app/src/main/res/layout/fragment_gallery.xml" value="0.35989583333333336" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.11220871327254306" />
+        <entry key="app/src/main/res/layout/fragment_photo_full_screen.xml" value="0.11220871327254306" />
+        <entry key="app/src/main/res/layout/item_photo.xml" value="0.11220871327254306" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="SuppressABINotification">
+    <option name="modulesWithSuppressedNotConfigured">
+      <set>
+        <option value="UnsplashPhotos.app" />
+      </set>
+    </option>
+  </component>
+</project>

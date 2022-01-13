@@ -7,9 +7,10 @@ import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import com.example.unsplashphotos.data.model.Photo
 import com.example.unsplashphotos.data.repository.DownloaderUtils.downloadPhoto
-import com.example.unsplashphotos.domain.usecase.GetPhotoFullScreenUseCase
+import com.example.unsplashphotos.domain.model.Photo
+import com.example.unsplashphotos.domain.usecase.FetchPhotoFullScreenUseCase
+import com.example.unsplashphotos.utils.DataState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,13 +20,12 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val getPhotoFullScreenUseCase: GetPhotoFullScreenUseCase,
+    private val fetchPhotoFullScreenUseCase: FetchPhotoFullScreenUseCase,
     state: SavedStateHandle
 ) : ViewModel(), Observable {
 
-
     val photoId = state.get<String>("photoId")
-    private val mutableStateFlow = MutableStateFlow<Photo?>(null)
+    private val mutableStateFlow: MutableStateFlow<DataState<Photo>?> = MutableStateFlow(DataState.Loading())
     val stateFlow = mutableStateFlow.asStateFlow()
 
     @Bindable
@@ -35,13 +35,14 @@ class PhotoFullViewModel @Inject constructor(
 
 
     suspend fun getPhotoById() {
-        if (photoId != null)
-            mutableStateFlow.value = getPhotoFullScreenUseCase.execute(photoId)
+        if (photoId != null){
+            mutableStateFlow.value = fetchPhotoFullScreenUseCase.getPhoto(photoId)
+        }
     }
 
     fun onClickDownloadFab(url: String) {
         if (photoId != null)
-            downloadPhoto(context,url, photoId)
+            downloadPhoto(context, url, photoId)
     }
 
     fun onImageClicked() {
@@ -51,7 +52,6 @@ class PhotoFullViewModel @Inject constructor(
         } else {
             fabToggle.value = true
             fabMutableStateFlow.value = true
-
         }
     }
 
