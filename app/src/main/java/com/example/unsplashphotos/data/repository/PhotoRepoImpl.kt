@@ -23,13 +23,11 @@ class PhotoRepoImpl @Inject constructor(
     }
 
     override suspend fun getPhotoById(photoId: String): DataState<Photo> {
-        val response = photoDataSource.getPhotoById(photoId)
-        val body = response.body()
-        Timber.tag("T===>").i("Photo: %s", body)
-        return if (body != null) {
-            DataState.Success(photoRemoteToPhotoMapper.mapFromEntity(body))
+        val fetchedPhoto = getPhotoFromCache(photoId)
+        return if (fetchedPhoto != null) {
+            DataState.Success(fetchedPhoto)
         } else {
-            return DataState.Error(Exception("Photo fetching failed"))
+            DataState.Error(Exception("Photo fetching failed"))
         }
     }
 
