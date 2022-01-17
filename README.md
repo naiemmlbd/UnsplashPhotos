@@ -2,9 +2,11 @@
 --------------
 ## _An android app that displays a list of photos as a gallery._
 
-
-
-
+<html>
+<body>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" /></p>
+</body>
+</html>
 ## Feature List
 
 - Get a list of photos from “https://api.unsplash.com/”
@@ -24,7 +26,7 @@ According to clean architecture, I have divided the code into three layers:
 3. Data Layer
 
 **1. Domain layer**
-This is the center of Clean Architecture. It establishes communication between the data and the presentation layer. This layer contains a domain model and repository( interface). We can see, this layer is in the middle of the clean architecture and the Data layer, and the Presentation layer only knows the Domain layer. Here, Outer layers( Data, UI ) depend on inner layers, but the inner layer doesn't depend on any, even it doesn't know about the data layer and the UI layer. Also, there are no implementation details in the inner layer, only business logic.
+This is the center of Clean Architecture. It establishes communication between the data and the Presentation layer. This layer contains a Domain model and repository( interface). We can see, this layer is in the middle of the clean architecture and the Data layer, and the Presentation layer only knows the Domain layer. Here, Outer layers( Data, UI ) depend on inner layers, but the inner layer doesn't depend on any, even it doesn't know about the data layer and the UI layer. Also, there are no implementation details in the inner layer, only business logic.
 
 **2. Data layer**
 This layer contains the Repository implementation, UseCase’s implementations, and Data source. Data sources get the required data by communicating with the server or local DB. With the help of repository implementation, I have managed the data from the Data source and mapped it to the domain model using a mapper. Then the repository implementation provides domain objects to the interactors. So, here I have introduced a repository pattern. The repository pattern helps to hide the data source of the application.
@@ -37,13 +39,13 @@ In the UnspalshPhotos app, this layer includes an activity that is the main acti
 3. ViewModel
 
 Model:
-This component is the output of the UseCase of the domain layer. It is basically the domain model (Photo) which we get from UseCase after mapping happens in the data layer.
+This component is the output of the UseCase of the Domain layer. It is basically the Domain model (Photo) which we get from UseCase after mapping happens in the data layer.
 
 View:
 This is the UI part of the app, which includes two fragments (). Here in MVVM, the view is decoupled from the View Model. We use the observer pattern for decoupling. It was obtained by LiveData previously, but now we use Kotlin Flow.
 
 ViewModel:
-The ViewModel is the main point of MVVM. I have established a connection between the presentation layer and the domain layer by putting useCase in ViewModel(put corresponding use case in the constructor). This component handles the data passed from the UseCases and sends them to the view and vice versa.
+The ViewModel is the main point of MVVM. I have established a connection between the Presentation layer and the Domain layer by putting useCase in ViewModel(put corresponding use case in the constructor). This component handles the data passed from the UseCases and sends them to the view and vice versa.
 
 ##UML class diagram
 
