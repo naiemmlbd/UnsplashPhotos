@@ -29,6 +29,7 @@ In this app, I have adopted Clean architecture with MVVM. According to clean arc
 <p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/1_uQYJsu2agzmjp9s_eEieeA.png" width="400" height="250"/></p>
 </body>
 </html>
+
 **1. Domain layer**
 This is the center of Clean Architecture. It establishes communication between the data and the Presentation layer. This layer contains a Domain model and repository( interface). We can see, this layer is in the middle of the clean architecture and the Data layer, and the Presentation layer only knows the Domain layer. Here, Outer layers( Data, UI ) depend on inner layers, but the inner layer doesn't depend on any, even it doesn't know about the data layer and the UI layer. Also, there are no implementation details in the inner layer, only business logic.
 
