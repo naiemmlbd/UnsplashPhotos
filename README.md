@@ -4,7 +4,7 @@
 
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="150" height="250"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="200" height="300"/></p>
 </body>
 </html>
 ## Feature List
@@ -26,7 +26,7 @@ According to clean architecture, I have divided the code into three layers:
 3. Data Layer
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/1_uQYJsu2agzmjp9s_eEieeA.png" width="3=200" height="180"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/1_uQYJsu2agzmjp9s_eEieeA.png" width="380" height="200"/></p>
 </body>
 </html>
 **1. Domain layer**
@@ -54,7 +54,7 @@ The ViewModel is the main point of MVVM. I have established a connection between
 ##UML class diagram
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML.jpeg" width="300" height="250"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML.jpeg" width="450" height="300"/></p>
 </body>
 </html>
 
