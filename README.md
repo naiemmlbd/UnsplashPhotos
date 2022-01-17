@@ -4,29 +4,29 @@
 
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="200" height="300"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="320"/></p>
 </body>
 </html>
+
 ## Feature List
 
 - Get a list of photos from “https://api.unsplash.com/”
 - A user can infinitely scroll on the gallery screen
 - A user can tap on a photo to see a full-screen photo
-- The app’s flavor/scheme can be changed easily so that changing from development API to      production API becomes trivial
+- The app’s flavor/scheme can be changed easily so that changing from development API to production API becomes trivial
 - Cache images
 - Cache API response
 - Allow saving photos in JPEG format to the local gallery
 - Allow sharing the photo
 
 ## The architectural pattern used in the app
-In this app, I have adopted Clean architecture with MVVM.
-According to clean architecture, I have divided the code into three layers:
+In this app, I have adopted Clean architecture with MVVM. According to clean architecture, I have divided the code into three layers:
 1. Presentation/UI layer
 2. Domain layer
 3. Data Layer
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/1_uQYJsu2agzmjp9s_eEieeA.png" width="380" height="200"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/1_uQYJsu2agzmjp9s_eEieeA.png" width="400" height="250"/></p>
 </body>
 </html>
 **1. Domain layer**
@@ -51,10 +51,11 @@ This is the UI part of the app, which includes two fragments (). Here in MVVM, t
 ViewModel:
 The ViewModel is the main point of MVVM. I have established a connection between the Presentation layer and the Domain layer by putting useCase in ViewModel(put corresponding use case in the constructor). This component handles the data passed from the UseCases and sends them to the view and vice versa.
 
-##UML class diagram
+UML class diagram
+--------------
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML.jpeg" width="450" height="300"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML.jpeg" width="500" height="350"/></p>
 </body>
 </html>
 
