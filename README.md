@@ -4,7 +4,7 @@
 
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="500"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="280" height="500"/></p>
 </body>
 </html>
 
@@ -64,7 +64,7 @@ UML class diagram
 --------------
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML3.jpeg" width="700" height="450"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML4.jpeg" width="800" height="500"/></p>
 </body>
 </html>
 
@@ -90,9 +90,9 @@ Libraries Used
     * [Paging 3][40] - The Paging library helps you load and display pages of data from a larger dataset from local storage or over network.
 * Third party and miscellaneous libraries
     * [Kotlin Coroutines][91] for managing background threads with simplified code and reducing needs for callbacks
-    * [Glide][90] for image loading.
-    * [Hilt][92]: Hilt is a dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project.
-    * [LruCache][94]: to cache Api response.
+    * [Glide][90] - for image loading.
+    * [Hilt][92] - Hilt is a dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project.
+    * [LruCache][94] - to cache Api response.
 
 [0]: https://developer.android.com/jetpack/components
 [1]: https://developer.android.com/topic/libraries/support-library/packages#v7-appcompat
