@@ -4,7 +4,7 @@
 
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="320"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="380"/></p>
 </body>
 </html>
 
@@ -56,7 +56,7 @@ UML class diagram
 --------------
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML.jpeg" width="500" height="350"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/UML2.jpeg" width="600" height="400"/></p>
 </body>
 </html>
 
@@ -64,7 +64,8 @@ Libraries Used
 --------------
 * [Foundation][0] - Components for core system capabilities, Kotlin extensions and support for multidex and automated testing.
     * [AppCompat][1] - Degrade gracefully on older versions of Android.
-    * [Android KTX][2] - Write more concise, idiomatic Kotlin code.
+      * [JetPack][1] - Degrade gracefully on older versions of Android.
+      * [Android KTX][2] - Write more concise, idiomatic Kotlin code.
       Dependency Injection
     * [Retrofit][42] - A type-safe HTTP client for Android and Java.
 
