@@ -4,7 +4,7 @@
 
 <html>
 <body>
-<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="430"/></p>
+<p align="center"><img src="https://github.com/jhnaiem/UnsplashPhotos/blob/develop/Mockup/ezgif.com-gif-maker.gif" width="250" height="500"/></p>
 </body>
 </html>
 
@@ -35,13 +35,16 @@ In this app, I have adopted Clean architecture with MVVM. According to clean arc
 </body>
 </html>
 
-###1. Domain layer
+### 1. Domain layer
+
 This is the center of Clean Architecture. It establishes communication between the data and the Presentation layer. This layer contains a Domain model and repository( interface). We can see, this layer is in the middle of the clean architecture and the Data layer, and the Presentation layer only knows the Domain layer. Here, Outer layers( Data, UI ) depend on inner layers, but the inner layer doesn't depend on any, even it doesn't know about the data layer and the UI layer. Also, there are no implementation details in the inner layer, only business logic.
 
-###2. Data layer
+### 2. Data layer
+
 This layer contains the Repository implementation, UseCase’s implementations, and Data source. Data sources get the required data by communicating with the server or local DB. With the help of repository implementation, I have managed the data from the Data source and mapped it to the domain model using a mapper. Then the repository implementation provides domain objects to the interactors. So, here I have introduced a repository pattern. The repository pattern helps to hide the data source of the application.
 
-###3. UI layer
+### 3. UI layer
+
 The main responsibilities of this layer are to get triggered to request data and, after getting the data showing them to the user.
 In the UnspalshPhotos app, this layer includes an activity that is the main activity which is the entry point to the app, two fragments, and two ViewModel. As I have followed MVVM and which is a technique to manage the UI layer. MVVM separated the presentation layer into three components, and they are,
 1. Model
