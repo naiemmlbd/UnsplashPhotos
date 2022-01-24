@@ -97,4 +97,6 @@ dependencies {
 
     //logger
     implementation "com.jakewharton.timber:timber:${versions.timber}"
+
+    kapt "com.google.dagger:dagger-android-processor:2.11"
 }

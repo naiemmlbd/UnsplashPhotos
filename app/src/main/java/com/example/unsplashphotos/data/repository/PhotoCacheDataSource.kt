@@ -1,6 +1,6 @@
 package com.example.unsplashphotos.data.repository
 
-import com.example.unsplashphotos.data.model.Photo
+import com.example.unsplashphotos.domain.model.Photo
 
 
 interface PhotoCacheDataSource {
