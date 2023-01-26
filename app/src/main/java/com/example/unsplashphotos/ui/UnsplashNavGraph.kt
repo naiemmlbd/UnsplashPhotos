@@ -13,14 +13,13 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.photofullscreen.PhotoFullScreen
-import com.example.unsplashphotos.ui.photofullscreen.PhotoFullViewModel
 
 @Composable
 fun UnsplashNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     startDestination: String = UnsplashDestinations.GALLERY_ROUTE,
-    viewModel: PhotoFullViewModel = hiltViewModel()
+    photoViewModel: PhotoViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val onPhotoClick = { photo: Photo ->
@@ -39,7 +38,7 @@ fun UnsplashNavGraph(
         modifier = modifier
     ) {
         composable(UnsplashDestinations.GALLERY_ROUTE) {
-            GalleryScreen(onPhotoClick = onPhotoClick)
+            GalleryScreen(onPhotoClick = onPhotoClick, photos = photoViewModel.getPhotos())
         }
 
         composable(

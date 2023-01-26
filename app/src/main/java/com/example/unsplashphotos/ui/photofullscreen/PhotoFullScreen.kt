@@ -38,7 +38,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.AppBar
-import com.example.unsplashphotos.ui.PhotoItem
+import com.example.unsplashphotos.ui.photoItem
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.utils.DataState.Error
 import com.example.unsplashphotos.utils.DataState.Loading
@@ -70,7 +70,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                val drawable = PhotoItem(
+                val drawable = photoItem(
                     photoUrl = photo.urls.regular,
                     modifier = Modifier.fillMaxWidth(),
                     contentScale = ContentScale.Fit

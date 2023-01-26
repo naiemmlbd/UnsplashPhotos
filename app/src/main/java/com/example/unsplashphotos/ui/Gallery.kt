@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,21 +30,44 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
+import com.example.unsplashphotos.R
 import com.example.unsplashphotos.R.string
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
+import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun Gallery(
+private fun PhotoGriding(
+    innerPadding: PaddingValues,
+    photos: Flow<PagingData<Photo>>,
+    onPhotoClick: (Photo) -> Unit
+) {
+    val photos = photos.collectAsLazyPagingItems()
+    LazyVerticalGrid(
+        columns = Adaptive(140.dp),
+        horizontalArrangement = Arrangement.spacedBy(5.dp),
+        verticalArrangement = Arrangement.spacedBy(5.dp),
+        contentPadding = innerPadding
+    ) {
+        items(photos.itemCount) { index ->
+            photos[index]?.let {
+                PhotoItemCard(photo = it, onClickPhoto = onPhotoClick)
+            }
+        }
+    }
+}
+
+@Composable
+fun GalleryScreen(
     modifier: Modifier = Modifier,
     onPhotoClick: (Photo) -> Unit,
-    photos: LazyPagingItems<Photo>
+    photos: Flow<PagingData<Photo>>
 ) {
     UnsplashTheme {
         Scaffold(
@@ -55,27 +79,9 @@ fun Gallery(
                 )
             }
         ) { innerPadding ->
-            LazyVerticalGrid(
-                columns = Adaptive(140.dp),
-                horizontalArrangement = Arrangement.spacedBy(5.dp),
-                verticalArrangement = Arrangement.spacedBy(5.dp),
-                contentPadding = innerPadding
-            ) {
-                items(photos.itemCount) { index ->
-                    photos[index]?.let {
-                        PhotoItemCard(photo = it, onClickPhoto = onPhotoClick)
-                    }
-                }
-            }
+            PhotoGriding(innerPadding, photos, onPhotoClick)
         }
     }
-}
-
-@Composable
-fun GalleryScreen(modifier: Modifier = Modifier, onPhotoClick: (Photo) -> Unit) {
-    val viewModel = hiltViewModel<PhotoViewModel>()
-    val photos = viewModel.photos.collectAsLazyPagingItems()
-    Gallery(modifier = modifier, onPhotoClick = onPhotoClick, photos)
 }
 
 
@@ -91,7 +97,7 @@ fun PhotoItemCard(
             .clickable { onClickPhoto(photo) },
         shape = RoundedCornerShape(0.dp)
     ) {
-        PhotoItem(
+        photoItem(
             photoUrl = photo.urls.thumb,
             modifier = Modifier
                 .height(120.dp)
@@ -102,13 +108,14 @@ fun PhotoItemCard(
 }
 
 @Composable
-fun PhotoItem(
+fun photoItem(
     photoUrl: String,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit
 ): Drawable? {
     val painter = rememberAsyncImagePainter(
         Builder(LocalContext.current)
+            .placeholder(R.drawable.placeholder)
             .data(photoUrl)
             .build()
     )
@@ -116,7 +123,7 @@ fun PhotoItem(
         contentScale = contentScale,
         painter = painter,
         contentDescription = null,
-        modifier = modifier
+        modifier = modifier,
     )
     val state = painter.state as? AsyncImagePainter.State.Success
     return state?.result?.drawable
@@ -152,6 +159,6 @@ fun AppBar(modifier: Modifier = Modifier) {
 @Composable
 private fun FeaturedPostPreview() {
     UnsplashTheme {
-        PhotoItem("")
+        photoItem("")
     }
 }
