@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.grid.GridCells.Adaptive
+import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -22,24 +22,30 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.paging.PagingData
-import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
-import com.example.unsplashphotos.R
+import com.example.unsplashphotos.R.drawable
 import com.example.unsplashphotos.R.string
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
+import com.example.unsplashphotos.ui.theme.UnsplashTypography
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -50,10 +56,11 @@ private fun PhotoGriding(
 ) {
     val photos = photos.collectAsLazyPagingItems()
     LazyVerticalGrid(
-        columns = Adaptive(140.dp),
+        columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
-        contentPadding = innerPadding
+        contentPadding = innerPadding,
+        state = rememberLazyGridState()
     ) {
         items(photos.itemCount) { index ->
             photos[index]?.let {
@@ -79,7 +86,7 @@ fun GalleryScreen(
                 )
             }
         ) { innerPadding ->
-            PhotoGriding(innerPadding, photos, onPhotoClick)
+            PhotoGriding(innerPadding, remember { photos }, onPhotoClick)
         }
     }
 }
@@ -91,19 +98,46 @@ fun PhotoItemCard(
     onClickPhoto: (Photo) -> Unit = {}
 ) {
     Card(
-        backgroundColor = Color.White,
+        elevation = 20.dp,
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClickPhoto(photo) },
         shape = RoundedCornerShape(0.dp)
     ) {
-        photoItem(
-            photoUrl = photo.urls.thumb,
-            modifier = Modifier
-                .height(120.dp)
-                .width(60.dp),
-            contentScale = ContentScale.Crop,
-        )
+        ConstraintLayout {
+            val (image, title) = createRefs()
+            AsyncImage(
+                model = Builder(LocalContext.current).data(photo.urls.thumb).crossfade(true)
+                    .build(),
+                contentDescription = "contentDescription",
+                placeholder = painterResource(drawable.placeholder),
+                modifier = Modifier
+                    .constrainAs(image) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .height(200.dp)
+                    .fillMaxWidth(),
+                contentScale = ContentScale.Crop,
+                alignment = Alignment.Center
+            )
+            Text(
+                text = photo.altDescription.ifEmpty { "Unsplash" },
+                style = UnsplashTypography.body1,
+                color = Color.White,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+                modifier = Modifier
+                    .constrainAs(title) {
+                        top.linkTo(image.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+        }
     }
 }
 
@@ -115,7 +149,7 @@ fun photoItem(
 ): Drawable? {
     val painter = rememberAsyncImagePainter(
         Builder(LocalContext.current)
-            .placeholder(R.drawable.placeholder)
+            .placeholder(drawable.placeholder)
             .data(photoUrl)
             .build()
     )

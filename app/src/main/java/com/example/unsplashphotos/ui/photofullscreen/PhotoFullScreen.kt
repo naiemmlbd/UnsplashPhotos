@@ -72,7 +72,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
             ) {
                 val drawable = photoItem(
                     photoUrl = photo.urls.regular,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
                 drawable?.let {
