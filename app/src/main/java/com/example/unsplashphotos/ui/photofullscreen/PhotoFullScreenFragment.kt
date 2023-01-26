@@ -19,7 +19,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.databinding.FragmentPhotoFullScreenBinding
 import com.example.unsplashphotos.ui.ShareUtils.shareImage
-import com.example.unsplashphotos.utils.DataState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -107,33 +106,33 @@ class PhotoFullScreenFragment : Fragment() {
     }
 
     private fun displayPhoto() {
-        binding.progressBar.visibility = View.VISIBLE
-        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
-            photoFullViewModel.getPhotoById()
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoFullViewModel.stateFlow.collectLatest {
-                    when (it) {
-                        is DataState.Error -> {
-                            binding.progressBar.visibility = View.GONE
-                            binding.textTitle.text = getString(R.string.no_data)
-                            Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
-                                .show()
-                        }
-                        is DataState.Loading -> {
-                            binding.progressBar.visibility = View.VISIBLE
-                        }
-                        is DataState.Success -> {
-                            binding.photoFullScreen = it.data
-                            downloadLink = it.data.links.download
-                            shareHtmlLink = it.data.links.html
-                            likes = it.data.likes
-                            binding.progressBar.visibility = View.GONE
-                        }
-                        null -> {}
-                    }
-                }
-            }
-        }
+//        binding.progressBar.visibility = View.VISIBLE
+//        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+//            photoFullViewModel.getPhotoById("")
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                photoFullViewModel.photoStateFlow.collectLatest {
+//                    when (it) {
+//                        is DataState.Error -> {
+//                            binding.progressBar.visibility = View.GONE
+//                            binding.textTitle.text = getString(R.string.no_data)
+//                            Toast.makeText(activity, getString(R.string.no_data), Toast.LENGTH_LONG)
+//                                .show()
+//                        }
+//                        is DataState.Loading -> {
+//                            binding.progressBar.visibility = View.VISIBLE
+//                        }
+//                        is DataState.Success -> {
+//                            binding.photoFullScreen = it.data
+//                            downloadLink = it.data.links.download
+//                            shareHtmlLink = it.data.links.html
+//                            likes = it.data.likes
+//                            binding.progressBar.visibility = View.GONE
+//                        }
+//                        null -> {}
+//                    }
+//                }
+//            }
+//        }
     }
 
     override fun onResume() {
