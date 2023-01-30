@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyGridItemSpanScope
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
@@ -61,22 +63,13 @@ private fun PhotoGriding(
 ) {
     val photos = photos.collectAsLazyPagingItems()
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Adaptive(180.dp),
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         contentPadding = innerPadding,
         state = rememberLazyGridState()
     ) {
         when (val state = photos.loadState.prepend) {
-            is LoadState.NotLoading -> Unit
-            is LoadState.Loading -> {
-                Loading()
-            }
-            is LoadState.Error -> {
-                Error(message = state.error.message ?: "")
-            }
-        }
-        when (val state = photos.loadState.refresh) {
             is LoadState.NotLoading -> Unit
             is LoadState.Loading -> {
                 Loading()
@@ -103,7 +96,8 @@ private fun PhotoGriding(
 }
 
 private fun LazyGridScope.Loading() {
-    item {
+    val span: (LazyGridItemSpanScope) -> GridItemSpan = { GridItemSpan(2) }
+    item(span = span) {
         CircularProgressIndicator(modifier = Modifier.padding(16.dp))
     }
 }

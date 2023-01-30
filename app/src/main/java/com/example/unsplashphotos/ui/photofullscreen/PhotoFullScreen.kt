@@ -1,6 +1,7 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
 import android.Manifest.permission
+import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
@@ -24,13 +25,15 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarResult
+import androidx.compose.material.SnackbarHostState
+import androidx.compose.material.SnackbarResult.ActionPerformed
 import androidx.compose.material.icons.Icons.Rounded
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -59,7 +62,9 @@ import com.example.unsplashphotos.utils.DataState.Error
 import com.example.unsplashphotos.utils.DataState.Loading
 import com.example.unsplashphotos.utils.DataState.Success
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -70,6 +75,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
     val requiredPermissionsState =
         rememberPermissionState(permission = permission.WRITE_EXTERNAL_STORAGE)
     val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
     val permissionRequested = remember { mutableStateOf(false) }
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -96,6 +102,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
     }
 
     UnsplashTheme {
+        val snackbarHostState = scaffoldState.snackbarHostState
         Scaffold(topBar = {
             AppBar(
                 Modifier
@@ -103,34 +110,16 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
                     .fillMaxWidth()
             )
         }, scaffoldState = scaffoldState, floatingActionButton = {
-            val scope = rememberCoroutineScope()
-            val snackbarHostState = scaffoldState.snackbarHostState
-            Column() {
-                FloatingActionButtonShare(onShareClicked = onShareClicked)
-                Spacer(modifier = Modifier.height(8.dp))
-                FloatingActionButtonDownload(onDownloadClicked = {
-                    if (requiredPermissionsState.hasPermission) {
-                        viewModel.onClickDownloadFab(photo.links.download)
-                    } else if (requiredPermissionsState.shouldShowRationale) {
-                        scope.launch {
-                            val result = snackbarHostState.showSnackbar(
-                                message = "Permission required", actionLabel = "Go to settings"
-                            )
-                            if (result == SnackbarResult.ActionPerformed) {
-                                val intent = Intent(
-                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                    Uri.fromParts("package", context.packageName, null)
-                                )
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                context.startActivity(intent)
-                            }
-                        }
-                    } else {
-                        requiredPermissionsState.launchPermissionRequest()
-                        permissionRequested.value = true
-                    }
-                })
-            }
+            FloatingActionButtons(
+                onShareClicked,
+                requiredPermissionsState,
+                viewModel,
+                photo,
+                scope,
+                snackbarHostState,
+                context,
+                permissionRequested
+            )
         }) { innerPadding ->
             Box(
                 Modifier
@@ -153,9 +142,55 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.Bottom,
             ) {
-                FloatingActionButtonInfo()
+                FloatingActionButtonInfo(onClick = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            message = "Likes: ${photo.likes}", actionLabel = null
+                        )
+                    }
+                })
             }
         }
+    }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+private fun FloatingActionButtons(
+    onShareClicked: () -> Unit,
+    requiredPermissionsState: PermissionState,
+    viewModel: PhotoFullViewModel,
+    photo: Photo,
+    scope: CoroutineScope,
+    snackbarHostState: SnackbarHostState,
+    context: Context,
+    permissionRequested: MutableState<Boolean>
+) {
+    Column() {
+        FloatingActionButtonShare(onShareClicked = onShareClicked)
+        Spacer(modifier = Modifier.height(8.dp))
+        FloatingActionButtonDownload(onDownloadClicked = {
+            if (requiredPermissionsState.hasPermission) {
+                viewModel.onClickDownloadFab(photo.links.download)
+            } else if (requiredPermissionsState.shouldShowRationale) {
+                scope.launch {
+                    val result = snackbarHostState.showSnackbar(
+                        message = "Permission required", actionLabel = "Go to settings"
+                    )
+                    if (result == ActionPerformed) {
+                        val intent = Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.fromParts("package", context.packageName, null)
+                        )
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent)
+                    }
+                }
+            } else {
+                requiredPermissionsState.launchPermissionRequest()
+                permissionRequested.value = true
+            }
+        })
     }
 }
 
