@@ -69,7 +69,12 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, photo: Photo) {
+fun PhotoFullScreen(
+    modifier: Modifier = Modifier,
+    onShareClicked: () -> Unit,
+    photo: Photo,
+    onDownloadClicked: (String, String) -> Unit
+) {
     val context = LocalContext.current.applicationContext
     val viewModel = hiltViewModel<PhotoFullViewModel>()
     val requiredPermissionsState =
@@ -83,7 +88,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
         val permissionObserver = LifecycleEventObserver { _, event ->
             if (event == ON_RESUME && requiredPermissionsState.permissionRequested) {
                 if (requiredPermissionsState.hasPermission && permissionRequested.value) {
-                    viewModel.onClickDownloadFab(photo.links.download)
+                    onDownloadClicked(photo.links.download, photo.id)
                 } else if (permissionRequested.value) {
                     Toast.makeText(
                         context,
@@ -112,6 +117,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
         }, scaffoldState = scaffoldState, floatingActionButton = {
             FloatingActionButtons(
                 onShareClicked,
+                onDownloadClicked = onDownloadClicked,
                 requiredPermissionsState,
                 viewModel,
                 photo,
@@ -158,6 +164,7 @@ fun PhotoFullScreen(modifier: Modifier = Modifier, onShareClicked: () -> Unit, p
 @Composable
 private fun FloatingActionButtons(
     onShareClicked: () -> Unit,
+    onDownloadClicked: (String, String) -> Unit,
     requiredPermissionsState: PermissionState,
     viewModel: PhotoFullViewModel,
     photo: Photo,
@@ -171,7 +178,7 @@ private fun FloatingActionButtons(
         Spacer(modifier = Modifier.height(8.dp))
         FloatingActionButtonDownload(onDownloadClicked = {
             if (requiredPermissionsState.hasPermission) {
-                viewModel.onClickDownloadFab(photo.links.download)
+                onDownloadClicked(photo.links.download, photo.id)
             } else if (requiredPermissionsState.shouldShowRationale) {
                 scope.launch {
                     val result = snackbarHostState.showSnackbar(
@@ -207,7 +214,11 @@ fun FullScreenLoading() {
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun PhotoFullScreen(photoId: String, onShareClicked: (BitmapDrawable?) -> Unit) {
+fun PhotoFullScreen(
+    photoId: String,
+    onShareClicked: (BitmapDrawable?) -> Unit,
+    onDownloadClicked: (String, String) -> Unit
+) {
     val viewModel = hiltViewModel<PhotoFullViewModel>()
     viewModel.getPhotoById(photoId)
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -221,7 +232,8 @@ fun PhotoFullScreen(photoId: String, onShareClicked: (BitmapDrawable?) -> Unit) 
             PhotoFullScreen(
                 Modifier,
                 onShareClicked = { onShareClicked(viewModel.bitmapDrawable.value) },
-                (uiState as Success<Photo>).data
+                (uiState as Success<Photo>).data,
+                onDownloadClicked = onDownloadClicked
             )
         }
         else -> {}
