@@ -6,11 +6,13 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Environment
-import android.widget.Toast
 import com.example.unsplashphotos.R
+import timber.log.Timber
 import java.io.File
 
 class DownloaderUtils(private val context: Context) {
+
+    var downloadStatusListener: ((Int, String) -> Unit)? = null
 
     @SuppressLint("Range")
     fun downloadPhoto(url: String, photoId: String) {
@@ -36,37 +38,27 @@ class DownloaderUtils(private val context: Context) {
         var finishDownload = false
         while (!finishDownload) {
             val cursor: Cursor = downloadManager.query(query)
-            if (cursor.moveToFirst()) {
-                val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
-                when (status) {
-                    DownloadManager.STATUS_FAILED -> {
-                        finishDownload = true
-                    }
-                    DownloadManager.STATUS_PAUSED -> {}
-                    DownloadManager.STATUS_PENDING -> {}
-                    DownloadManager.STATUS_RUNNING -> {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.downloading),
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                    DownloadManager.STATUS_SUCCESSFUL -> {
-                        finishDownload = true
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.downloadSuccess) + directory,
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                    else -> {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.downloadNothing),
-                            Toast.LENGTH_SHORT
-                        ).show()
+            try {
+                if (cursor.moveToFirst()) {
+                    val status = cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+                    when (status) {
+                        DownloadManager.STATUS_FAILED -> {
+                            finishDownload = true
+                        }
+                        DownloadManager.STATUS_PAUSED -> {}
+                        DownloadManager.STATUS_PENDING -> {}
+                        DownloadManager.STATUS_RUNNING -> {}
+                        DownloadManager.STATUS_SUCCESSFUL -> {
+                            downloadStatusListener?.invoke(status, directory.toString())
+                            finishDownload = true
+                        }
+                        else -> {}
                     }
                 }
+            } catch (e: Exception) {
+                Timber.tag("Error").e(e.toString())
+            } finally {
+                cursor.close()
             }
         }
     }

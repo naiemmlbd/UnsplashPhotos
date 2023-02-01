@@ -54,8 +54,10 @@ class PhotoFullViewModel @Inject constructor(
     }
 
     fun onClickDownloadFab(url: String, photoId: String) {
-        if (photoId.isNotEmpty())
-            downloaderUtils.downloadPhoto(url, photoId)
+        viewModelScope.launch(Dispatchers.IO) {
+            if (photoId.isNotEmpty())
+                downloaderUtils.downloadPhoto(url, photoId)
+        }
     }
 
     fun onImageClicked() {
