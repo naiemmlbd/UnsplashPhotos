@@ -4,25 +4,27 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import com.example.unsplashphotos.databinding.FragmentGalleryBinding
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.adapter.PhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GalleryFragment : Fragment() {
     private lateinit var photoAdapter: PhotoAdapter
     private lateinit var binding: FragmentGalleryBinding
     private val photoViewModel by viewModels<PhotoViewModel>()
+
+    private val onPhotoClicked = { selectedPhoto: Photo ->
+        val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
+            selectedPhoto.id
+        )
+        findNavController().navigate(action)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,32 +37,15 @@ class GalleryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupPhotoRecyclerView()
+        setupComposeView()
     }
 
-    private fun setupPhotoRecyclerView() {
-        photoAdapter = PhotoAdapter { selectedPhoto: Photo, extra ->
-            val action = GalleryFragmentDirections.actionGalleryFragmentToPhotoFullScreenFragment(
-                selectedPhoto.id
-            )
-            findNavController().navigate(action)
-        }
-        binding.photosRecyclerView.adapter = photoAdapter
-        binding.photosRecyclerView.layoutManager =
-            GridLayoutManager(requireContext(), SPAN_COUNT)
-        displayPhotos()
-    }
-
-    private fun displayPhotos() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                photoViewModel.photos.collect {
-                    photoAdapter.submitData(it)
-                }
+    private fun setupComposeView() {
+        binding.composeView.apply {
+            setViewCompositionStrategy(DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                GalleryScreen(viewModel = photoViewModel, onPhotoClick = onPhotoClicked)
             }
         }
-    }
-    companion object {
-        const val SPAN_COUNT = 2
     }
 }

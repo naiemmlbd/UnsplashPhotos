@@ -6,18 +6,21 @@ buildscript {
     }
 
     ext.versions = [
-            'navigation': '2.3.5',
-            'lifecycle_version' : '2.4.0',
-            'retrofit_version' : '2.9.0',
-            'glide' : '4.12.0',
-            'hilt' : '2.40.5',
-            'paging' : '3.1.0',
-            'timber' : '5.0.1'
+            'navigation'         : '2.5.1',
+            'lifecycle_version'  : '2.4.0',
+            'retrofit_version'   : '2.9.0',
+            'glide'              : '4.12.0',
+            'hilt'               : '2.44.2',
+            'paging'             : '3.1.1',
+            'timber'             : '5.0.1',
+            'compose_version'    : '1.2.0',
+            'hilt_navigation'    : '1.0.0',
+            'accompanist_version': '0.25.1'
     ]
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.4'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0'
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.3'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.44.2'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:${versions.navigation}"
 
         // NOTE: Do not place your application dependencies here; they belong

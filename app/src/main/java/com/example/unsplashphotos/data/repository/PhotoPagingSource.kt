@@ -25,6 +25,7 @@ class PhotoPagingSource @Inject constructor(
                     nextKey = nextPage
                 )
             }
+            else -> {}
         }
         return LoadResult.Error(Exception("Error Occurred"))
     }
