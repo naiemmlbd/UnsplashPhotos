@@ -3,6 +3,7 @@ package com.example.unsplashphotos.ui.photofullscreen
 
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
@@ -32,6 +33,10 @@ class PhotoFullViewModel @Inject constructor(
     var bitmapDrawable: MutableState<BitmapDrawable?> = mutableStateOf(null)
     private val viewModelState: MutableStateFlow<DataState<Photo>?> =
         MutableStateFlow(DataState.Loading())
+    val visiblePermissionDialogQueue = mutableStateListOf<String>()
+    fun dismissDialog() {
+        visiblePermissionDialogQueue.removeFirst()
+    }
 
     // UI state exposed to the UI
     val uiState = viewModelState
@@ -57,6 +62,14 @@ class PhotoFullViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (photoId.isNotEmpty())
                 downloaderUtils.downloadPhoto(url, photoId)
+        }
+    }
+
+    fun onPermissionResult(
+        permission: String
+    ) {
+        if (!this.visiblePermissionDialogQueue.contains(permission)) {
+            visiblePermissionDialogQueue.add(permission)
         }
     }
 

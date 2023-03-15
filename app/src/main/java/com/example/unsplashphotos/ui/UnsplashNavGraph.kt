@@ -57,8 +57,7 @@ fun UnsplashNavGraph(
                 onShareClicked = { bitmapDrawable ->
                     share(bitmapDrawable, photoId)
                 },
-                photoId = photoId,
-                onDownloadClicked = photoFullViewModel::onClickDownloadFab
+                photoId = photoId
             )
         }
     }

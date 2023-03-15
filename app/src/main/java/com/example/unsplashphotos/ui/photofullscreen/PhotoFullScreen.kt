@@ -1,12 +1,14 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
+import android.Manifest
 import android.Manifest.permission
-import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.provider.Settings
-import android.widget.Toast
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,18 +27,12 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.SnackbarResult.ActionPerformed
 import androidx.compose.material.icons.Icons.Rounded
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,13 +40,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle.Event.ON_RESUME
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.unsplashphotos.R
@@ -61,10 +54,11 @@ import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.utils.DataState.Error
 import com.example.unsplashphotos.utils.DataState.Loading
 import com.example.unsplashphotos.utils.DataState.Success
+import com.example.unsplashphotos.utils.ExternalStoragePermissionTextProvider
+import com.example.unsplashphotos.utils.PermissionDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -72,39 +66,60 @@ import kotlinx.coroutines.launch
 fun PhotoFullScreen(
     modifier: Modifier = Modifier,
     onShareClicked: () -> Unit,
-    photo: Photo,
-    onDownloadClicked: (String, String) -> Unit
+    photo: Photo
 ) {
     val context = LocalContext.current.applicationContext
     val viewModel = hiltViewModel<PhotoFullViewModel>()
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
     val requiredPermissionsState =
         rememberPermissionState(permission = permission.WRITE_EXTERNAL_STORAGE)
     val scaffoldState = rememberScaffoldState()
     val scope = rememberCoroutineScope()
-    val permissionRequested = remember { mutableStateOf(false) }
-    val lifecycleOwner = LocalLifecycleOwner.current
 
-    DisposableEffect(lifecycleOwner) {
-        val permissionObserver = LifecycleEventObserver { _, event ->
-            if (event == ON_RESUME && requiredPermissionsState.permissionRequested) {
-                if (requiredPermissionsState.hasPermission && permissionRequested.value) {
-                    onDownloadClicked(photo.links.download, photo.id)
-                } else if (permissionRequested.value) {
-                    Toast.makeText(
-                        context,
-                        "Please allow the permission to download the image",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-                permissionRequested.value = false
+    val storagePermissionResultLauncher = rememberLauncherForActivityResult(
+        contract = RequestPermission(),
+        onResult = { isGranted ->
+            if (!isGranted) {
+                viewModel.onPermissionResult(
+                    permission = permission.WRITE_EXTERNAL_STORAGE,
+                )
+            } else if (isGranted) {
+                viewModel.onClickDownloadFab(photo.links.download, photo.id)
             }
         }
-        lifecycleOwner.lifecycle.addObserver(permissionObserver)
+    )
 
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(permissionObserver)
+    dialogQueue
+        .reversed()
+        .forEach { permission ->
+            PermissionDialog(
+                permissionTextProvider = when (permission) {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
+                        ExternalStoragePermissionTextProvider()
+                    }
+                    else -> return@forEach
+                },
+                isPermanentlyDeclined = !requiredPermissionsState.shouldShowRationale,
+                onDismiss = viewModel::dismissDialog,
+                onOkClick = {
+                    viewModel.dismissDialog()
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", context.packageName, null)
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent)
+                },
+                onGoToAppSettingsClick = {
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts("package", context.packageName, null)
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent)
+                }
+            )
         }
-    }
 
     UnsplashTheme {
         val snackbarHostState = scaffoldState.snackbarHostState
@@ -117,14 +132,9 @@ fun PhotoFullScreen(
         }, scaffoldState = scaffoldState, floatingActionButton = {
             FloatingActionButtons(
                 onShareClicked,
-                onDownloadClicked = onDownloadClicked,
+                storagePermissionResultLauncher,
                 requiredPermissionsState,
-                viewModel,
-                photo,
-                scope,
-                snackbarHostState,
-                context,
-                permissionRequested
+                photo
             )
         }) { innerPadding ->
             Box(
@@ -164,38 +174,24 @@ fun PhotoFullScreen(
 @Composable
 private fun FloatingActionButtons(
     onShareClicked: () -> Unit,
-    onDownloadClicked: (String, String) -> Unit,
+    storagePermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>,
     requiredPermissionsState: PermissionState,
-    viewModel: PhotoFullViewModel,
-    photo: Photo,
-    scope: CoroutineScope,
-    snackbarHostState: SnackbarHostState,
-    context: Context,
-    permissionRequested: MutableState<Boolean>
+    photo: Photo
 ) {
+    val viewModel = hiltViewModel<PhotoFullViewModel>()
+
     Column() {
         FloatingActionButtonShare(onShareClicked = onShareClicked)
         Spacer(modifier = Modifier.height(8.dp))
         FloatingActionButtonDownload(onDownloadClicked = {
-            if (requiredPermissionsState.hasPermission) {
-                onDownloadClicked(photo.links.download, photo.id)
-            } else if (requiredPermissionsState.shouldShowRationale) {
-                scope.launch {
-                    val result = snackbarHostState.showSnackbar(
-                        message = "Permission required", actionLabel = "Go to settings"
-                    )
-                    if (result == ActionPerformed) {
-                        val intent = Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.fromParts("package", context.packageName, null)
-                        )
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent)
-                    }
-                }
+            if (requiredPermissionsState.shouldShowRationale) {
+                viewModel.onPermissionResult(
+                    permission = permission.WRITE_EXTERNAL_STORAGE,
+                )
             } else {
-                requiredPermissionsState.launchPermissionRequest()
-                permissionRequested.value = true
+                storagePermissionResultLauncher.launch(
+                    permission.WRITE_EXTERNAL_STORAGE
+                )
             }
         })
     }
@@ -216,8 +212,7 @@ fun FullScreenLoading() {
 @Composable
 fun PhotoFullScreen(
     photoId: String,
-    onShareClicked: (BitmapDrawable?) -> Unit,
-    onDownloadClicked: (String, String) -> Unit
+    onShareClicked: (BitmapDrawable?) -> Unit
 ) {
     val viewModel = hiltViewModel<PhotoFullViewModel>()
     viewModel.getPhotoById(photoId)
@@ -232,8 +227,7 @@ fun PhotoFullScreen(
             PhotoFullScreen(
                 Modifier,
                 onShareClicked = { onShareClicked(viewModel.bitmapDrawable.value) },
-                (uiState as Success<Photo>).data,
-                onDownloadClicked = onDownloadClicked
+                (uiState as Success<Photo>).data
             )
         }
         else -> {}
