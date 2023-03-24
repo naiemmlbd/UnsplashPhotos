@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -45,14 +46,17 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
-import com.example.unsplashphotos.R.drawable
 import com.example.unsplashphotos.R.string
 import com.example.unsplashphotos.domain.model.Photo
+import com.example.unsplashphotos.ui.destinations.PhotoFullScreenDestination
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.ui.theme.UnsplashTypography
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -114,12 +118,15 @@ private fun LazyGridScope.Error(
     }
 }
 
+
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun GalleryScreen(
-    modifier: Modifier = Modifier,
-    onPhotoClick: (Photo) -> Unit,
-    photos: Flow<PagingData<Photo>>
+    navigator: DestinationsNavigator
 ) {
+    val photoViewModel: PhotoViewModel = hiltViewModel()
+    val photos = photoViewModel.getPhotos()
     UnsplashTheme {
         Scaffold(
             topBar = {
@@ -130,7 +137,13 @@ fun GalleryScreen(
                 )
             }
         ) { innerPadding ->
-            PhotoGriding(innerPadding, remember { photos }, onPhotoClick)
+            PhotoGriding(innerPadding, remember { photos }, onPhotoClick = { photo ->
+                navigator.navigate(
+                    PhotoFullScreenDestination(
+                        photo = photo
+                    )
+                )
+            })
         }
     }
 }
@@ -196,7 +209,6 @@ fun photoItem(
 ): Drawable? {
     val painter = rememberAsyncImagePainter(
         Builder(LocalContext.current)
-            .placeholder(drawable.placeholder)
             .data(photoUrl)
             .build()
     )

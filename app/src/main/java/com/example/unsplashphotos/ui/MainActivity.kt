@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,9 +28,7 @@ class MainActivity : AppCompatActivity() {
         setupListeners()
         setContent {
             navController = rememberAnimatedNavController()
-            UnsplashNavGraph(
-                navController = navController
-            )
+            DestinationsNavHost(navGraph = NavGraphs.root)
         }
     }
 
