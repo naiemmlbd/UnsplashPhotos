@@ -22,7 +22,7 @@ private val Domine = FontFamily(
 val UnsplashTypography = Typography(
     h4 = TextStyle(
         fontFamily = Montserrat,
-        fontWeight = FontWeight.W600,
+        fontWeight = FontWeight.W400,
         fontSize = 30.sp
     ),
     h5 = TextStyle(

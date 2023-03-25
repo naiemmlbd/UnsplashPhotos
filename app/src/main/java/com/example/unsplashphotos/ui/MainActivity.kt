@@ -38,7 +38,6 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch() {
                 when (downloadStatus) {
                     DownloadManager.STATUS_SUCCESSFUL -> {
-
                         Toast.makeText(
                             applicationContext,
                             applicationContext.getString(R.string.downloadSuccess) + " " + directory,
