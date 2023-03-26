@@ -6,12 +6,19 @@ import android.widget.Toast
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.data.repository.DownloaderUtils
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.NestedNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,13 +29,26 @@ class MainActivity : AppCompatActivity() {
     lateinit var downloaderUtils: DownloaderUtils
     private lateinit var navController: NavHostController
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupListeners()
         setContent {
-            navController = rememberAnimatedNavController()
-            DestinationsNavHost(navGraph = NavGraphs.root)
+            val navController = rememberAnimatedNavController()
+            val navHostEngine = rememberAnimatedNavHostEngine(
+                navHostContentAlignment = Alignment.TopCenter,
+                rootDefaultAnimations = RootNavGraphDefaultAnimations.ACCOMPANIST_FADING,
+                defaultAnimationsForNestedNavGraph = mapOf(
+                    NavGraphs.root to NestedNavGraphDefaultAnimations(
+                        enterTransition = { slideInHorizontally() },
+                        exitTransition = { slideOutHorizontally() }
+                    ),
+                ))
+            DestinationsNavHost(
+                navGraph = NavGraphs.root,
+                navController = navController,
+                engine = navHostEngine
+            )
         }
     }
 

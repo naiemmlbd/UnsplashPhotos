@@ -146,6 +146,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:1.0.0"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
     implementation 'io.github.raamcosta.compose-destinations:core:1.6.36-beta'
+    implementation "io.github.raamcosta.compose-destinations:animations-core:1.6.36-beta"
     ksp 'io.github.raamcosta.compose-destinations:ksp:1.6.36-beta'
 
     // Accompanist
