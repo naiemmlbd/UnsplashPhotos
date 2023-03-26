@@ -65,7 +65,7 @@ class PhotoFullViewModel @Inject constructor(
     }
 
     fun onPermissionResult(
-        permission: String,
+        permission: String
     ) {
         if (!this.visiblePermissionDialogQueue.contains(permission)) {
             visiblePermissionDialogQueue.add(permission)
