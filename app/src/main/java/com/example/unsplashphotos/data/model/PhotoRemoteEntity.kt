@@ -1,6 +1,5 @@
 package com.example.unsplashphotos.data.model
 
-
 import com.google.gson.annotations.SerializedName
 
 data class PhotoRemoteEntity(
@@ -13,5 +12,5 @@ data class PhotoRemoteEntity(
     @SerializedName("links")
     val linksRemote: LinksRemote?,
     @SerializedName("likes")
-    val likes: Int?
+    val likes: Int?,
 )

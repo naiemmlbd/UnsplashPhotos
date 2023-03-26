@@ -6,6 +6,6 @@ import com.example.unsplashphotos.domain.usecase.FetchPhotoFullScreenUseCase
 import com.example.unsplashphotos.utils.DataState
 import javax.inject.Inject
 
-class FetchPhotoFullScreenUseCaseImpl @Inject constructor(private val photoRepo: PhotoRepo): FetchPhotoFullScreenUseCase {
+class FetchPhotoFullScreenUseCaseImpl @Inject constructor(private val photoRepo: PhotoRepo) : FetchPhotoFullScreenUseCase {
     override suspend fun getPhoto(photoId: String): DataState<Photo> = photoRepo.getPhotoById(photoId)
 }

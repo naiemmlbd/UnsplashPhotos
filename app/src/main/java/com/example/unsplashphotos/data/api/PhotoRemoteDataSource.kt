@@ -6,17 +6,16 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-
 interface PhotoRemoteDataSource {
 
     @GET("/photos/")
     suspend fun getPhotos(
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int
+        @Query("per_page") perPage: Int,
     ): Response<List<PhotoRemoteEntity>>
 
     @GET("/photos/{id}")
     suspend fun getPhotoById(
-        @Path(value = "id") id: String
+        @Path(value = "id") id: String,
     ): Response<PhotoRemoteEntity>
 }
