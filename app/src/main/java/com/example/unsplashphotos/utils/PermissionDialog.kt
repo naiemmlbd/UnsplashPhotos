@@ -20,13 +20,13 @@ fun PermissionDialog(
     onDismiss: () -> Unit,
     onOkClick: () -> Unit,
     onGoToAppSettingsClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
         buttons = {
             Column(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 Divider()
                 Text(
@@ -46,7 +46,7 @@ fun PermissionDialog(
                                 onOkClick()
                             }
                         }
-                        .padding(16.dp)
+                        .padding(16.dp),
                 )
             }
         },
@@ -56,11 +56,11 @@ fun PermissionDialog(
         text = {
             Text(
                 text = permissionTextProvider.getDescription(
-                    isPermanentlyDeclined = isPermanentlyDeclined
-                )
+                    isPermanentlyDeclined = isPermanentlyDeclined,
+                ),
             )
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }
 
@@ -72,7 +72,7 @@ class ExternalStoragePermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if (isPermanentlyDeclined) {
             "It seems you permanently declined storage permission. " +
-                    "You can go to the app settings to grant it."
+                "You can go to the app settings to grant it."
         } else {
             "This app needs access to your storage permission to download photo."
         }

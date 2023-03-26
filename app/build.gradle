@@ -4,6 +4,19 @@ plugins {
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
     id 'dagger.hilt.android.plugin'
+    id 'kotlin-parcelize'
+    id 'com.google.devtools.ksp' version '1.7.10-1.0.6'
+}
+
+kotlin {
+    sourceSets {
+        debug {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        release {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
+        }
+    }
 }
 
 android {
@@ -61,6 +74,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    applicationVariants.all { variant ->
+        variant.addJavaSourceFoldersToModel(
+                new File(buildDir, "generated/ksp/${variant.name}/kotlin")
+        )
     }
     buildFeatures {
         compose true
@@ -127,6 +145,10 @@ dependencies {
     implementation "androidx.hilt:hilt-navigation-compose:${versions.hilt_navigation}"
     implementation "androidx.navigation:navigation-compose:1.0.0"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0"
+    implementation 'io.github.raamcosta.compose-destinations:core:1.6.36-beta'
+    implementation "io.github.raamcosta.compose-destinations:animations-core:1.6.36-beta"
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.6.36-beta'
+
     // Accompanist
     implementation "com.google.accompanist:accompanist-placeholder-material:0.25.1"
     implementation "com.google.accompanist:accompanist-navigation-animation:0.20.2"

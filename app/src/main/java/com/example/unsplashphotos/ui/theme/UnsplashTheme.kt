@@ -13,7 +13,7 @@ fun UnsplashTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
         colors = if (darkTheme) DarkColors else LightColors,
         typography = UnsplashTypography,
         shapes = UnsplashShapes,
-        content = content
+        content = content,
     )
 }
 
@@ -24,7 +24,7 @@ private val LightColors = lightColors(
     secondary = Red700,
     secondaryVariant = Red900,
     onSecondary = Color.White,
-    error = Red800
+    error = Red800,
 )
 
 private val DarkColors = darkColors(
@@ -33,5 +33,5 @@ private val DarkColors = darkColors(
     onPrimary = Color.Black,
     secondary = Red300,
     onSecondary = Color.Black,
-    error = Red200
+    error = Red200,
 )

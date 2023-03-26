@@ -6,9 +6,8 @@ import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
-
 class PhotoDataSourceImpl @Inject constructor(
-    private val photoRemoteDataSource: PhotoRemoteDataSource
+    private val photoRemoteDataSource: PhotoRemoteDataSource,
 ) : PhotoDataSource {
 
     override suspend fun getPhotos(page: Int, perPage: Int): Response<List<PhotoRemoteEntity>> {
@@ -22,5 +21,4 @@ class PhotoDataSourceImpl @Inject constructor(
         Timber.d("CheckPhoto: %s", photo)
         return photo
     }
-
 }

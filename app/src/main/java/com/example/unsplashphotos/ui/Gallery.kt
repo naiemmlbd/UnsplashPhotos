@@ -38,6 +38,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -45,21 +46,24 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
-import com.example.unsplashphotos.R.drawable
 import com.example.unsplashphotos.R.string
 import com.example.unsplashphotos.domain.model.Photo
+import com.example.unsplashphotos.ui.destinations.PhotoFullScreenDestination
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.ui.theme.UnsplashTypography
 import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.Flow
 
 @Composable
 private fun PhotoGriding(
     innerPadding: PaddingValues,
     photos: Flow<PagingData<Photo>>,
-    onPhotoClick: (Photo) -> Unit
+    onPhotoClick: (Photo) -> Unit,
 ) {
     val photos = photos.collectAsLazyPagingItems()
     LazyVerticalGrid(
@@ -67,7 +71,7 @@ private fun PhotoGriding(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         contentPadding = innerPadding,
-        state = rememberLazyGridState()
+        state = rememberLazyGridState(),
     ) {
         when (val state = photos.loadState.prepend) {
             is LoadState.NotLoading -> Unit
@@ -103,50 +107,57 @@ private fun LazyGridScope.Loading() {
 }
 
 private fun LazyGridScope.Error(
-    message: String
+    message: String,
 ) {
     item {
         Text(
             text = message,
             style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.error
+            color = MaterialTheme.colors.error,
         )
     }
 }
 
+@RootNavGraph(start = true)
+@Destination
 @Composable
 fun GalleryScreen(
-    modifier: Modifier = Modifier,
-    onPhotoClick: (Photo) -> Unit,
-    photos: Flow<PagingData<Photo>>
+    navigator: DestinationsNavigator,
 ) {
+    val photoViewModel: PhotoViewModel = hiltViewModel()
+    val photos = photoViewModel.getPhotos()
     UnsplashTheme {
         Scaffold(
             topBar = {
                 AppBar(
                     Modifier
                         .height(40.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
-            }
+            },
         ) { innerPadding ->
-            PhotoGriding(innerPadding, remember { photos }, onPhotoClick)
+            PhotoGriding(innerPadding, remember { photos }, onPhotoClick = { photo ->
+                navigator.navigate(
+                    PhotoFullScreenDestination(
+                        photo = photo,
+                    ),
+                )
+            })
         }
     }
 }
 
-
 @Composable
 fun PhotoItemCard(
     photo: Photo,
-    onClickPhoto: (Photo) -> Unit = {}
+    onClickPhoto: (Photo) -> Unit = {},
 ) {
     Card(
         elevation = 20.dp,
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClickPhoto(photo) },
-        shape = RoundedCornerShape(0.dp)
+        shape = RoundedCornerShape(0.dp),
     ) {
         ConstraintLayout {
             val (image, title) = createRefs()
@@ -167,7 +178,7 @@ fun PhotoItemCard(
                     .height(200.dp)
                     .fillMaxWidth(),
                 contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
+                alignment = Alignment.Center,
             )
             Text(
                 text = photo.altDescription.ifEmpty { "Unsplash" },
@@ -182,7 +193,7 @@ fun PhotoItemCard(
                         end.linkTo(parent.end)
                     }
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp),
             )
         }
     }
@@ -192,13 +203,12 @@ fun PhotoItemCard(
 fun photoItem(
     photoUrl: String,
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit
+    contentScale: ContentScale = ContentScale.Fit,
 ): Drawable? {
     val painter = rememberAsyncImagePainter(
         Builder(LocalContext.current)
-            .placeholder(drawable.placeholder)
             .data(photoUrl)
-            .build()
+            .build(),
     )
     Image(
         contentScale = contentScale,
@@ -217,22 +227,22 @@ fun AppBar(modifier: Modifier = Modifier) {
             Brush.verticalGradient(
                 colors = listOf(
                     MaterialTheme.colors.primary,
-                    MaterialTheme.colors.onSecondary
-                )
-            )
+                    MaterialTheme.colors.onSecondary,
+                ),
+            ),
         ),
         navigationIcon = {
             Icon(
                 imageVector = Icons.Rounded.ThumbUp,
                 contentDescription = null,
-                modifier = Modifier.padding(start = 12.dp)
+                modifier = Modifier.padding(start = 12.dp),
             )
         },
         title = {
             Text(text = stringResource(string.app_name))
         },
         backgroundColor = Color.Transparent,
-        elevation = 0.dp
+        elevation = 0.dp,
     )
 }
 

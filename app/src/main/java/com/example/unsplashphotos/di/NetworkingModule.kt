@@ -25,7 +25,7 @@ object NetworkingModule {
     }
 
     @Provides
-    fun provideNetworkInterceptor() : Interceptor = Interceptor {
+    fun provideNetworkInterceptor(): Interceptor = Interceptor {
         val original: Request = it.request()
         val url = original.url.newBuilder().addQueryParameter("client_id", CLIENT_ID)
             .build()

@@ -16,7 +16,6 @@ class DownloaderUtils(private val context: Context) {
 
     @SuppressLint("Range")
     fun downloadPhoto(url: String, photoId: String) {
-
         val directory = File(Environment.DIRECTORY_PICTURES)
 
         if (!directory.exists()) {
