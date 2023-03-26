@@ -68,7 +68,7 @@ import kotlinx.coroutines.launch
 fun PhotoFullView(
     modifier: Modifier = Modifier,
     onShareClicked: () -> Unit,
-    photo: Photo
+    photo: Photo,
 ) {
     val context = LocalContext.current.applicationContext
     val viewModel = hiltViewModel<PhotoFullViewModel>()
@@ -88,7 +88,7 @@ fun PhotoFullView(
             } else if (isGranted) {
                 viewModel.onClickDownloadFab(photo.links.download, photo.id)
             }
-        }
+        },
     )
 
     dialogQueue
@@ -107,19 +107,19 @@ fun PhotoFullView(
                     viewModel.dismissDialog()
                     val intent = Intent(
                         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts("package", context.packageName, null)
+                        Uri.fromParts("package", context.packageName, null),
                     )
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 },
                 onGoToAppSettingsClick = {
                     val intent = Intent(
                         Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.fromParts("package", context.packageName, null)
+                        Uri.fromParts("package", context.packageName, null),
                     )
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
-                }
+                },
             )
         }
 
@@ -129,25 +129,26 @@ fun PhotoFullView(
             AppBar(
                 Modifier
                     .height(40.dp)
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
         }, scaffoldState = scaffoldState, floatingActionButton = {
             FloatingActionButtons(
                 onShareClicked,
                 storagePermissionResultLauncher,
                 requiredPermissionsState,
-                photo
+                photo,
             )
         }) { innerPadding ->
             Box(
                 Modifier
                     .fillMaxSize()
-                    .padding(innerPadding), contentAlignment = Alignment.Center
+                    .padding(innerPadding),
+                contentAlignment = Alignment.Center,
             ) {
                 val drawable = photoItem(
                     photoUrl = photo.urls.regular,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Fit
+                    contentScale = ContentScale.Fit,
                 )
                 drawable?.let {
                     viewModel.bitmapDrawable.value = it as BitmapDrawable
@@ -163,7 +164,8 @@ fun PhotoFullView(
                 FloatingActionButtonInfo(onClick = {
                     scope.launch {
                         snackbarHostState.showSnackbar(
-                            message = "Likes: ${photo.likes}", actionLabel = null
+                            message = "Likes: ${photo.likes}",
+                            actionLabel = null,
                         )
                     }
                 })
@@ -178,7 +180,7 @@ private fun FloatingActionButtons(
     onShareClicked: () -> Unit,
     storagePermissionResultLauncher: ManagedActivityResultLauncher<String, Boolean>,
     requiredPermissionsState: PermissionState,
-    photo: Photo
+    photo: Photo,
 ) {
     val viewModel = hiltViewModel<PhotoFullViewModel>()
 
@@ -192,7 +194,7 @@ private fun FloatingActionButtons(
                 )
             } else {
                 storagePermissionResultLauncher.launch(
-                    permission.WRITE_EXTERNAL_STORAGE
+                    permission.WRITE_EXTERNAL_STORAGE,
                 )
             }
         })
@@ -204,7 +206,7 @@ fun FullScreenLoading() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .wrapContentSize(Alignment.Center)
+            .wrapContentSize(Alignment.Center),
     ) {
         CircularProgressIndicator()
     }
@@ -214,7 +216,7 @@ fun FullScreenLoading() {
 @Destination
 @Composable
 fun PhotoFullScreen(
-    photo: Photo
+    photo: Photo,
 ) {
     val viewModel = hiltViewModel<PhotoFullViewModel>()
     viewModel.getPhotoById(photoId = photo.id)
@@ -232,28 +234,29 @@ fun PhotoFullScreen(
                 onShareClicked = {
                     viewModel.bitmapDrawable.value?.let {
                         ShareUtils.shareImage(
-                            context = context, photoId = photo.id,
-                            it
+                            context = context,
+                            photoId = photo.id,
+                            it,
                         )
                     }
                 },
-                (uiState as Success<Photo>).data
+                (uiState as Success<Photo>).data,
             )
         }
         else -> {}
     }
-
 }
-
 
 @Composable
 fun FloatingActionButtonShare(
     onShareClicked: () -> Unit = {},
     containerColor: Color = Color.Cyan,
-    shape: RoundedCornerShape = RoundedCornerShape(16.dp)
+    shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
-        onClick = onShareClicked, shape = shape, backgroundColor = containerColor
+        onClick = onShareClicked,
+        shape = shape,
+        backgroundColor = containerColor,
     ) {
         Icon(
             imageVector = Rounded.Share,
@@ -267,13 +270,13 @@ fun FloatingActionButtonShare(
 fun FloatingActionButtonInfo(
     onClick: () -> Unit = {},
     containerColor: Color = Color.Cyan,
-    shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50))
+    shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
 ) {
     FloatingActionButton(
         modifier = Modifier.size(40.dp),
         onClick = onClick,
         shape = shape,
-        backgroundColor = containerColor
+        backgroundColor = containerColor,
     ) {
         Icon(
             imageVector = Rounded.Info,
@@ -290,7 +293,9 @@ fun FloatingActionButtonDownload(
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
-        onClick = onDownloadClicked, shape = shape, backgroundColor = containerColor
+        onClick = onDownloadClicked,
+        shape = shape,
+        backgroundColor = containerColor,
     ) {
         Icon(
             painter = painterResource(R.drawable.ic_baseline_arrow_circle_down_24),

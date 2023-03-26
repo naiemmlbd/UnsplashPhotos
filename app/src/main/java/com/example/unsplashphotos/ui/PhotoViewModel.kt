@@ -12,11 +12,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class PhotoViewModel @Inject constructor(
-    private val fetchPhotoUseCase: FetchPhotoUseCase
+    private val fetchPhotoUseCase: FetchPhotoUseCase,
 ) : ViewModel() {
 
     fun getPhotos() = Pager(
-        PagingConfig(pageSize = PhotoPagingSource.PAGE_SIZE, enablePlaceholders = false)
+        PagingConfig(pageSize = PhotoPagingSource.PAGE_SIZE, enablePlaceholders = false),
     ) {
         PhotoPagingSource(fetchPhotoUseCase = fetchPhotoUseCase)
     }.flow.cachedIn(viewModelScope)

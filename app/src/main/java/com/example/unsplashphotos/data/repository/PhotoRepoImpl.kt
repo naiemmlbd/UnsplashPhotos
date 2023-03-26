@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class PhotoRepoImpl @Inject constructor(
     private val photoDataSource: PhotoDataSource,
-    private val photoRemoteToPhotoMapper: PhotoRemoteToPhotoMapperImpl
+    private val photoRemoteToPhotoMapper: PhotoRemoteToPhotoMapperImpl,
 ) : PhotoRepo {
 
     override suspend fun getPhotos(page: Int, perPage: Int): DataState<List<Photo>> {
@@ -20,9 +20,9 @@ class PhotoRepoImpl @Inject constructor(
         val response = photoDataSource.getPhotoById(photoId)
         val body = response.body()
         Timber.tag("T===>").i("Photo: %s", body)
-        return if(body != null){
+        return if (body != null) {
             DataState.Success(photoRemoteToPhotoMapper.mapFromEntity(body))
-        }else{
+        } else {
             DataState.Error(Exception(response.message()))
         }
     }

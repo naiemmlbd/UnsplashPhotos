@@ -23,7 +23,7 @@ class PhotoPagingSource @Inject constructor(
                 return Page(
                     data = photoResult.data,
                     prevKey = if (page == STARTING_PAGE) null else page - 1,
-                    nextKey = nextPage
+                    nextKey = nextPage,
                 )
             }
             else -> {}

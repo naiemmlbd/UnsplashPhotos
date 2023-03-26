@@ -32,5 +32,4 @@ class AppModule {
     fun provideDownloaderUtils(context: Context): DownloaderUtils {
         return DownloaderUtils(context = context)
     }
-
 }

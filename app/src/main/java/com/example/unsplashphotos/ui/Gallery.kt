@@ -63,7 +63,7 @@ import kotlinx.coroutines.flow.Flow
 private fun PhotoGriding(
     innerPadding: PaddingValues,
     photos: Flow<PagingData<Photo>>,
-    onPhotoClick: (Photo) -> Unit
+    onPhotoClick: (Photo) -> Unit,
 ) {
     val photos = photos.collectAsLazyPagingItems()
     LazyVerticalGrid(
@@ -71,7 +71,7 @@ private fun PhotoGriding(
         horizontalArrangement = Arrangement.spacedBy(5.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),
         contentPadding = innerPadding,
-        state = rememberLazyGridState()
+        state = rememberLazyGridState(),
     ) {
         when (val state = photos.loadState.prepend) {
             is LoadState.NotLoading -> Unit
@@ -107,23 +107,22 @@ private fun LazyGridScope.Loading() {
 }
 
 private fun LazyGridScope.Error(
-    message: String
+    message: String,
 ) {
     item {
         Text(
             text = message,
             style = MaterialTheme.typography.h6,
-            color = MaterialTheme.colors.error
+            color = MaterialTheme.colors.error,
         )
     }
 }
-
 
 @RootNavGraph(start = true)
 @Destination
 @Composable
 fun GalleryScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     val photoViewModel: PhotoViewModel = hiltViewModel()
     val photos = photoViewModel.getPhotos()
@@ -133,33 +132,32 @@ fun GalleryScreen(
                 AppBar(
                     Modifier
                         .height(40.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
-            }
+            },
         ) { innerPadding ->
             PhotoGriding(innerPadding, remember { photos }, onPhotoClick = { photo ->
                 navigator.navigate(
                     PhotoFullScreenDestination(
-                        photo = photo
-                    )
+                        photo = photo,
+                    ),
                 )
             })
         }
     }
 }
 
-
 @Composable
 fun PhotoItemCard(
     photo: Photo,
-    onClickPhoto: (Photo) -> Unit = {}
+    onClickPhoto: (Photo) -> Unit = {},
 ) {
     Card(
         elevation = 20.dp,
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClickPhoto(photo) },
-        shape = RoundedCornerShape(0.dp)
+        shape = RoundedCornerShape(0.dp),
     ) {
         ConstraintLayout {
             val (image, title) = createRefs()
@@ -180,7 +178,7 @@ fun PhotoItemCard(
                     .height(200.dp)
                     .fillMaxWidth(),
                 contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
+                alignment = Alignment.Center,
             )
             Text(
                 text = photo.altDescription.ifEmpty { "Unsplash" },
@@ -195,7 +193,7 @@ fun PhotoItemCard(
                         end.linkTo(parent.end)
                     }
                     .fillMaxWidth()
-                    .padding(8.dp)
+                    .padding(8.dp),
             )
         }
     }
@@ -205,12 +203,12 @@ fun PhotoItemCard(
 fun photoItem(
     photoUrl: String,
     modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit
+    contentScale: ContentScale = ContentScale.Fit,
 ): Drawable? {
     val painter = rememberAsyncImagePainter(
         Builder(LocalContext.current)
             .data(photoUrl)
-            .build()
+            .build(),
     )
     Image(
         contentScale = contentScale,
@@ -229,22 +227,22 @@ fun AppBar(modifier: Modifier = Modifier) {
             Brush.verticalGradient(
                 colors = listOf(
                     MaterialTheme.colors.primary,
-                    MaterialTheme.colors.onSecondary
-                )
-            )
+                    MaterialTheme.colors.onSecondary,
+                ),
+            ),
         ),
         navigationIcon = {
             Icon(
                 imageVector = Icons.Rounded.ThumbUp,
                 contentDescription = null,
-                modifier = Modifier.padding(start = 12.dp)
+                modifier = Modifier.padding(start = 12.dp),
             )
         },
         title = {
             Text(text = stringResource(string.app_name))
         },
         backgroundColor = Color.Transparent,
-        elevation = 0.dp
+        elevation = 0.dp,
     )
 }
 

@@ -41,13 +41,14 @@ class MainActivity : AppCompatActivity() {
                 defaultAnimationsForNestedNavGraph = mapOf(
                     NavGraphs.root to NestedNavGraphDefaultAnimations(
                         enterTransition = { slideInHorizontally() },
-                        exitTransition = { slideOutHorizontally() }
+                        exitTransition = { slideOutHorizontally() },
                     ),
-                ))
+                ),
+            )
             DestinationsNavHost(
                 navGraph = NavGraphs.root,
                 navController = navController,
-                engine = navHostEngine
+                engine = navHostEngine,
             )
         }
     }
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(
                             applicationContext,
                             applicationContext.getString(R.string.downloadSuccess) + " " + directory,
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_SHORT,
                         ).show()
                     }
                 }

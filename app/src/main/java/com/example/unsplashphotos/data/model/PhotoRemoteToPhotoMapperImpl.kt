@@ -13,14 +13,14 @@ class PhotoRemoteToPhotoMapperImpl @Inject constructor() :
             altDescription = entity.altDescription ?: "",
             urls = mapToDomainUrls(entity.urlsRemote),
             links = mapToDomainLinks(entity.linksRemote),
-            likes = entity.likes ?: 0
+            likes = entity.likes ?: 0,
         )
     }
 
     private fun mapToDomainUrls(urlsRemote: UrlsRemote?): Photo.Urls {
         return Photo.Urls(
             urlsRemote?.regular ?: "",
-            urlsRemote?.thumb ?: ""
+            urlsRemote?.thumb ?: "",
         )
     }
 
@@ -29,7 +29,7 @@ class PhotoRemoteToPhotoMapperImpl @Inject constructor() :
             linksRemote?.download ?: "",
             linksRemote?.downloadLocation ?: "",
             linksRemote?.html ?: "",
-            linksRemote?.self ?: ""
+            linksRemote?.self ?: "",
         )
     }
 
@@ -39,7 +39,7 @@ class PhotoRemoteToPhotoMapperImpl @Inject constructor() :
             altDescription = domainModel.altDescription,
             urlsRemote = UrlsRemote(),
             linksRemote = LinksRemote(),
-            likes = domainModel.likes
+            likes = domainModel.likes,
         )
     }
 }

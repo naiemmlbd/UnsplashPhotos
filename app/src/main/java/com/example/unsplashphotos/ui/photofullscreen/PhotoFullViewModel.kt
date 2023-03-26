@@ -1,6 +1,5 @@
 package com.example.unsplashphotos.ui.photofullscreen
 
-
 import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
@@ -27,7 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PhotoFullViewModel @Inject constructor(
     private val downloaderUtils: DownloaderUtils,
-    private val fetchPhotoFullScreenUseCase: FetchPhotoFullScreenUseCase
+    private val fetchPhotoFullScreenUseCase: FetchPhotoFullScreenUseCase,
 ) : ViewModel(), Observable {
 
     var bitmapDrawable: MutableState<BitmapDrawable?> = mutableStateOf(null)
@@ -43,14 +42,13 @@ class PhotoFullViewModel @Inject constructor(
         .stateIn(
             viewModelScope,
             SharingStarted.Eagerly,
-            viewModelState.value
+            viewModelState.value,
         )
 
     @Bindable
     val fabToggle = MutableLiveData<Boolean>()
     private val fabMutableStateFlow = MutableStateFlow<Boolean>(false)
     val fabStateFlow = fabMutableStateFlow.asStateFlow()
-
 
     fun getPhotoById(photoId: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -60,13 +58,14 @@ class PhotoFullViewModel @Inject constructor(
 
     fun onClickDownloadFab(url: String, photoId: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            if (photoId.isNotEmpty())
+            if (photoId.isNotEmpty()) {
                 downloaderUtils.downloadPhoto(url, photoId)
+            }
         }
     }
 
     fun onPermissionResult(
-        permission: String
+        permission: String,
     ) {
         if (!this.visiblePermissionDialogQueue.contains(permission)) {
             visiblePermissionDialogQueue.add(permission)
@@ -84,7 +83,6 @@ class PhotoFullViewModel @Inject constructor(
     }
 
     override fun addOnPropertyChangedCallback(callback: OnPropertyChangedCallback?) {
-
     }
 
     override fun removeOnPropertyChangedCallback(callback: OnPropertyChangedCallback?) {
