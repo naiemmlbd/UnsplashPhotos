@@ -8,13 +8,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavHostController
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.data.repository.DownloaderUtils
+import com.example.unsplashphotos.ui.theme.Bittersweet
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.animations.defaults.NestedNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
@@ -34,6 +37,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setupListeners()
         setContent {
+            val systemUiController = rememberSystemUiController()
+            SideEffect {
+                systemUiController.setStatusBarColor(
+                    color = Bittersweet,
+                    darkIcons = false
+                )
+            }
+
             val navController = rememberAnimatedNavController()
             val navHostEngine = rememberAnimatedNavHostEngine(
                 navHostContentAlignment = Alignment.TopCenter,

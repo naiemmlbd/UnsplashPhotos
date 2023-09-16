@@ -5,7 +5,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,8 +25,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ThumbUp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,12 +33,15 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -46,9 +49,11 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
+import com.example.unsplashphotos.R
 import com.example.unsplashphotos.R.string
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.destinations.PhotoFullScreenDestination
+import com.example.unsplashphotos.ui.theme.Bittersweet
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.ui.theme.UnsplashTypography
 import com.google.accompanist.placeholder.PlaceholderHighlight
@@ -78,6 +83,7 @@ private fun PhotoGriding(
             is LoadState.Loading -> {
                 Loading()
             }
+
             is LoadState.Error -> {
                 Error(message = state.error.message ?: "")
             }
@@ -92,6 +98,7 @@ private fun PhotoGriding(
             is LoadState.Loading -> {
                 Loading()
             }
+
             is LoadState.Error -> {
                 Error(message = state.error.message ?: "")
             }
@@ -118,6 +125,7 @@ private fun LazyGridScope.Error(
     }
 }
 
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -126,6 +134,17 @@ fun GalleryScreen(
 ) {
     val photoViewModel: PhotoViewModel = hiltViewModel()
     val photos = photoViewModel.getPhotos()
+    val isLoading = photoViewModel.isLoading.collectAsStateWithLifecycle(true).value
+
+    photoGallery(photos, navigator, isLoading)
+}
+
+@Composable
+private fun photoGallery(
+    photos: Flow<PagingData<Photo>>,
+    navigator: DestinationsNavigator,
+    isLoading: Boolean
+) {
     UnsplashTheme {
         Scaffold(
             topBar = {
@@ -136,13 +155,23 @@ fun GalleryScreen(
                 )
             },
         ) { innerPadding ->
-            PhotoGriding(innerPadding, remember { photos }, onPhotoClick = { photo ->
-                navigator.navigate(
-                    PhotoFullScreenDestination(
-                        photo = photo,
-                    ),
-                )
-            })
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(horizontal = 0.dp, vertical = 6.dp)
+            ) {
+                PhotoGriding(innerPadding, remember { photos }, onPhotoClick = { photo ->
+                    navigator.navigate(
+                        PhotoFullScreenDestination(
+                            photo = photo,
+                        ),
+                    )
+                })
+                if (isLoading) {
+                    ProgressIndicator()
+                }
+            }
         }
     }
 }
@@ -226,14 +255,14 @@ fun AppBar(modifier: Modifier = Modifier) {
         modifier = modifier.background(
             Brush.verticalGradient(
                 colors = listOf(
-                    MaterialTheme.colors.primary,
-                    MaterialTheme.colors.onSecondary,
+                    Bittersweet,
+                    Bittersweet,
                 ),
             ),
         ),
         navigationIcon = {
             Icon(
-                imageVector = Icons.Rounded.ThumbUp,
+                painter = painterResource(id = R.drawable.baseline_local_florist_24),
                 contentDescription = null,
                 modifier = Modifier.padding(start = 12.dp),
             )

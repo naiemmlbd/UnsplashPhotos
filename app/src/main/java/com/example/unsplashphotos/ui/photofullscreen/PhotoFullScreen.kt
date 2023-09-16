@@ -50,6 +50,7 @@ import com.example.unsplashphotos.R
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.AppBar
 import com.example.unsplashphotos.ui.photoItem
+import com.example.unsplashphotos.ui.theme.Bittersweet
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.utils.DataState.Error
 import com.example.unsplashphotos.utils.DataState.Loading
@@ -209,7 +210,7 @@ fun FullScreenLoading() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center),
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = Bittersweet.copy(alpha = .5f))
     }
 }
 
@@ -253,7 +254,7 @@ fun PhotoFullScreen(
 @Composable
 fun FloatingActionButtonShare(
     onShareClicked: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
@@ -272,7 +273,7 @@ fun FloatingActionButtonShare(
 @Composable
 fun FloatingActionButtonInfo(
     onClick: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
 ) {
     FloatingActionButton(
@@ -292,7 +293,7 @@ fun FloatingActionButtonInfo(
 @Composable
 fun FloatingActionButtonDownload(
     onDownloadClicked: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
