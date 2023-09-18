@@ -49,8 +49,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.AppBar
-import com.example.unsplashphotos.ui.ShareUtils
 import com.example.unsplashphotos.ui.photoItem
+import com.example.unsplashphotos.ui.theme.Bittersweet
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.utils.DataState.Error
 import com.example.unsplashphotos.utils.DataState.Loading
@@ -60,6 +60,7 @@ import com.example.unsplashphotos.utils.PermissionDialog
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.rememberPermissionState
+import com.jhasan.bitmapdrawablesharelib.BitmapDrawableSharer
 import com.ramcosta.composedestinations.annotation.Destination
 import kotlinx.coroutines.launch
 
@@ -99,6 +100,7 @@ fun PhotoFullView(
                     Manifest.permission.WRITE_EXTERNAL_STORAGE -> {
                         ExternalStoragePermissionTextProvider()
                     }
+
                     else -> return@forEach
                 },
                 isPermanentlyDeclined = !requiredPermissionsState.shouldShowRationale,
@@ -208,7 +210,7 @@ fun FullScreenLoading() {
             .fillMaxSize()
             .wrapContentSize(Alignment.Center),
     ) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(color = Bittersweet.copy(alpha = .5f))
     }
 }
 
@@ -228,12 +230,13 @@ fun PhotoFullScreen(
         is Loading -> {
             FullScreenLoading()
         }
+
         is Success -> {
             PhotoFullView(
                 Modifier,
                 onShareClicked = {
                     viewModel.bitmapDrawable.value?.let {
-                        ShareUtils.shareImage(
+                        BitmapDrawableSharer.shareImage(
                             context = context,
                             photoId = photo.id,
                             it,
@@ -243,6 +246,7 @@ fun PhotoFullScreen(
                 (uiState as Success<Photo>).data,
             )
         }
+
         else -> {}
     }
 }
@@ -250,7 +254,7 @@ fun PhotoFullScreen(
 @Composable
 fun FloatingActionButtonShare(
     onShareClicked: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
@@ -269,7 +273,7 @@ fun FloatingActionButtonShare(
 @Composable
 fun FloatingActionButtonInfo(
     onClick: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: Shape = MaterialTheme.shapes.small.copy(CornerSize(percent = 50)),
 ) {
     FloatingActionButton(
@@ -289,7 +293,7 @@ fun FloatingActionButtonInfo(
 @Composable
 fun FloatingActionButtonDownload(
     onDownloadClicked: () -> Unit = {},
-    containerColor: Color = Color.Cyan,
+    containerColor: Color = Bittersweet,
     shape: RoundedCornerShape = RoundedCornerShape(16.dp),
 ) {
     FloatingActionButton(
