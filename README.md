@@ -1,6 +1,6 @@
 # UnsplashPhotos
 --------------
-## _An android app that displays a list of photos as a gallery._
+## _An Android app that displays a list of photos as a gallery._
 
 <html>
 <body>
@@ -70,7 +70,7 @@ UML class diagram
 
 Libraries Used
 --------------
-* [Foundation][0] - Components for core system capabilities, Kotlin extensions and support for multidex and automated testing.
+* [Foundation][0] - Components for core system capabilities, Kotlin extensions, and support for multidex and automated testing.
     * [AppCompat][1] - Degrade gracefully on older versions of Android.
       * [JetPack][1] - Degrade gracefully on older versions of Android.
       * [Android KTX][2] - Write more concise, idiomatic Kotlin code.
@@ -86,10 +86,10 @@ Libraries Used
 * [UI][30] - Details on why and how to use UI Components in your apps - together or separate
     * [Fragment][34] - A basic unit of composable UI.
     * [Animations & Transitions][31] - Move widgets and transition between screens.
-    * [Layout][35] - Lay out widgets using different algorithms.
-    * [Paging 3][40] - The Paging library helps you load and display pages of data from a larger dataset from local storage or over network.
-* Third party and miscellaneous libraries
-    * [Kotlin Coroutines][91] for managing background threads with simplified code and reducing needs for callbacks
+    * [Jetpack Compose][35] - Jetpack Compose is Android’s recommended modern toolkit for building native UI.
+    * [Paging 3][40] - The Paging library helps you load and display pages of data from a larger dataset from local storage or over the network.
+* Third-party and miscellaneous libraries
+    * [Kotlin Coroutines][91] for managing background threads with simplified code and reducing need for callbacks
     * [Glide][90] - for image loading.
     * [Hilt][92] - Hilt is a dependency injection library for Android that reduces the boilerplate of doing manual dependency injection in your project.
     * [LruCache][94] - to cache Api response.
@@ -109,7 +109,7 @@ Libraries Used
 [30]: https://developer.android.com/guide/topics/ui
 [31]: https://developer.android.com/training/animation/
 [34]: https://developer.android.com/guide/components/fragments
-[35]: https://developer.android.com/guide/topics/ui/declaring-layout
+[35]: https://developer.android.com/jetpack/compose
 [91]: https://kotlinlang.org/docs/reference/coroutines-overview.html
 [90]: https://bumptech.github.io/glide/
 [92]: https://developer.android.com/training/dependency-injection/hilt-android
