@@ -7,12 +7,11 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
-
-class ImageLoader (private val context: Context) {
+class ImageLoader(private val context: Context) {
 
     fun load(
         url: String,
-        imageView: ImageView
+        imageView: ImageView,
     ) {
         GlideApp.with(context)
             .load(url)
@@ -24,7 +23,7 @@ class ImageLoader (private val context: Context) {
     fun load(
         bitmap: Bitmap,
         imageView: ImageView,
-        placeholder: Int
+        placeholder: Int,
     ) {
         Glide.with(context)
             .load(bitmap)
@@ -35,7 +34,7 @@ class ImageLoader (private val context: Context) {
 
     fun load(
         drawable: Int,
-        imageView: ImageView
+        imageView: ImageView,
     ) {
         Glide.with(context)
             .load(drawable)
@@ -45,7 +44,7 @@ class ImageLoader (private val context: Context) {
 
     fun load(
         drawable: Drawable,
-        imageView: ImageView
+        imageView: ImageView,
     ) {
         Glide.with(context)
             .load(drawable)

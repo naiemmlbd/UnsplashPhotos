@@ -15,6 +15,7 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -25,7 +26,7 @@ object NetworkingModule {
     }
 
     @Provides
-    fun provideNetworkInterceptor() : Interceptor = Interceptor {
+    fun provideNetworkInterceptor(): Interceptor = Interceptor {
         val original: Request = it.request()
         val url = original.url.newBuilder().addQueryParameter("client_id", CLIENT_ID)
             .build()
@@ -37,6 +38,8 @@ object NetworkingModule {
     @Provides
     fun provideClient(networkInterceptor: Interceptor): OkHttpClient =
         OkHttpClient.Builder()
+            .connectTimeout(100, TimeUnit.SECONDS)
+            .readTimeout(100,TimeUnit.SECONDS)
             .addNetworkInterceptor(networkInterceptor)
             .addInterceptor(interceptor).build()
 

@@ -89,3 +89,4 @@ lint/tmp/
 *.hprof
 .idea/compiler.xml
 .idea/misc.xml
+/.idea/

@@ -28,6 +28,13 @@ class PhotoRepoImpl @Inject constructor(
             DataState.Success(fetchedPhoto)
         } else {
             DataState.Error(Exception("Photo fetching failed"))
+        val response = photoDataSource.getPhotoById(photoId)
+        val body = response.body()
+        Timber.tag("T===>").i("Photo: %s", body)
+        return if (body != null) {
+            DataState.Success(photoRemoteToPhotoMapper.mapFromEntity(body))
+        } else {
+            DataState.Error(Exception(response.message()))
         }
     }
 
