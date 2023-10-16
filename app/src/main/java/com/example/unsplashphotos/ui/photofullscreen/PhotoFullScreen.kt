@@ -9,6 +9,7 @@ import android.provider.Settings
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,10 +47,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest.Builder
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.domain.model.Photo
 import com.example.unsplashphotos.ui.AppBar
-import com.example.unsplashphotos.ui.photoItem
 import com.example.unsplashphotos.ui.theme.Bittersweet
 import com.example.unsplashphotos.ui.theme.UnsplashTheme
 import com.example.unsplashphotos.utils.DataState.Error
@@ -147,14 +150,12 @@ fun PhotoFullView(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center,
             ) {
-                val drawable = photoItem(
+                photoItem(
                     photoUrl = photo.urls.regular,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit,
+                    viewModel
                 )
-                drawable?.let {
-                    viewModel.bitmapDrawable.value = it as BitmapDrawable
-                }
             }
             Column(
                 modifier = Modifier
@@ -306,6 +307,31 @@ fun FloatingActionButtonDownload(
             contentDescription = "Download",
             tint = Color.Black,
         )
+    }
+}
+
+@Composable
+fun photoItem(
+    photoUrl: String,
+    modifier: Modifier = Modifier,
+    contentScale: ContentScale = ContentScale.Fit,
+    viewModel: PhotoFullViewModel,
+) {
+    val painter = rememberAsyncImagePainter(
+        Builder(LocalContext.current)
+            .data(photoUrl)
+            .build(),
+    )
+    Image(
+        contentScale = contentScale,
+        painter = painter,
+        contentDescription = null,
+        modifier = modifier,
+    )
+    val state = painter.state as? AsyncImagePainter.State.Success
+    val drawable = state?.result?.drawable
+    drawable?.let {
+        viewModel.bitmapDrawable.value = it as BitmapDrawable
     }
 }
 

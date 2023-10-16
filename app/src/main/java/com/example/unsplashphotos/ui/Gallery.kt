@@ -1,7 +1,5 @@
 package com.example.unsplashphotos.ui
 
-import android.graphics.drawable.Drawable
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,7 +34,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -46,8 +43,6 @@ import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter
-import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest.Builder
 import com.example.unsplashphotos.R
 import com.example.unsplashphotos.R.string
@@ -228,26 +223,6 @@ fun PhotoItemCard(
     }
 }
 
-@Composable
-fun photoItem(
-    photoUrl: String,
-    modifier: Modifier = Modifier,
-    contentScale: ContentScale = ContentScale.Fit,
-): Drawable? {
-    val painter = rememberAsyncImagePainter(
-        Builder(LocalContext.current)
-            .data(photoUrl)
-            .build(),
-    )
-    Image(
-        contentScale = contentScale,
-        painter = painter,
-        contentDescription = null,
-        modifier = modifier,
-    )
-    val state = painter.state as? AsyncImagePainter.State.Success
-    return state?.result?.drawable
-}
 
 @Composable
 fun AppBar(modifier: Modifier = Modifier) {
@@ -273,12 +248,4 @@ fun AppBar(modifier: Modifier = Modifier) {
         backgroundColor = Color.Transparent,
         elevation = 0.dp,
     )
-}
-
-@Preview("Photo item")
-@Composable
-private fun FeaturedPostPreview() {
-    UnsplashTheme {
-        photoItem("")
-    }
 }

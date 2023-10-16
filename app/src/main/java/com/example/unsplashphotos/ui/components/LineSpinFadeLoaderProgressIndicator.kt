@@ -1,4 +1,4 @@
-package com.example.unsplashphotos
+package com.example.unsplashphotos.ui.components
 
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.InfiniteTransition
